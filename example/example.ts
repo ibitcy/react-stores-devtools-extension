@@ -177,7 +177,8 @@ setTimeout(() => {
       object: {
         ...store2.state.object,
         newField: Date.now()
-      }
+      },
+      $actionName: "@this_is_update"
     });
   }, 3000);
 }, 1000);
@@ -187,8 +188,33 @@ setTimeout(() => {
     {
       zad: "name"
     },
-    { name: "Delayed store", live: true, immutable: true }
+    { name: "Delayed store", live: true }
   );
+
+  setTimeout(() => {
+    store.setState({
+      zad: "name_test",
+      $actionName: "@group/myfirst"
+    });
+  }, 1000);
+  setTimeout(() => {
+    store.setState({
+      zad: "name_new",
+      $actionName: "@group/mysecond"
+    });
+  }, 1000);
+  setTimeout(() => {
+    store.setState({
+      zad: "name_new",
+      $actionName: "@group2/sup"
+    });
+  }, 3000);
+  setTimeout(() => {
+    store.setState({
+      zad: "name_ne_name",
+      $actionName: "@group2/sup"
+    });
+  }, 4000);
 }, 5000);
 
 window["store"] = Store;

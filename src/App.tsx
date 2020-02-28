@@ -7,6 +7,7 @@ import { StoreList } from "components/organisms/StoresList";
 import { useInstance } from "hooks/useInstance";
 import * as React from "react";
 import { useGlobalState } from "hooks/useGlobalState";
+import { StoreHistory } from "components/organisms/StoreHistory";
 
 interface IProps {}
 
@@ -25,7 +26,11 @@ export const App: React.FC<IProps> = () => {
             <span css={description}>
               Make sure to use react-stores v5.0.0 or higher.
               <br />
-              Or connect with old store follow instruction.
+              For old version of react-stores connect with devtool followed{" "}
+              <a css={link} href="#">
+                instruction
+              </a>
+              .
             </span>
           }
         />
@@ -35,6 +40,9 @@ export const App: React.FC<IProps> = () => {
           {activeStore && instance?.stores?.has(activeStore) && (
             <StoreInspect />
           )}
+          {activeStore && instance?.stores?.has(activeStore) && (
+            <StoreHistory />
+          )}
         </Layout>
       )}
     </React.Fragment>
@@ -43,4 +51,10 @@ export const App: React.FC<IProps> = () => {
 
 const description = css`
   font-size: 10px;
+  text-align: center;
+  line-height: 20px;
+`;
+
+const link = css`
+  color: var(--text-base-color);
 `;

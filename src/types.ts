@@ -12,6 +12,7 @@ export type TIncomeDispatch =
       action: EAction.SET_STATE;
       payload: {
         name: string;
+        actionName?: string;
         nextState: string;
       };
     }
@@ -38,6 +39,7 @@ export type TOutDispatch =
       action: EAction.SET_STATE;
       payload: {
         name: string;
+        actionName?: string;
         nextState: string;
       };
     }

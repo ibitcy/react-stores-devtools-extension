@@ -60,7 +60,9 @@ export const Layout: React.FC<IProps> = ({ name, children }) => {
           }}
         />
       </div>
-      <div ref={thirdRef} style={{ width: storeUI.state.horizontal }}></div>
+      <div ref={thirdRef} style={{ width: storeUI.state.horizontal }}>
+        {children[2]}
+      </div>
     </div>
   );
 };

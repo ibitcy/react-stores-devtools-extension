@@ -39,11 +39,16 @@ class Inspector {
     }
   }
 
-  public updateState(name: string, nextState: Record<string, any>) {
+  public updateState(
+    name: string,
+    nextState: Record<string, any>,
+    actionName?: string
+  ) {
     this.sendDataToDevTools({
       action: EAction.SET_STATE,
       payload: {
         name: name,
+        actionName,
         nextState: encodeData(nextState)
       }
     });

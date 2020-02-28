@@ -4,18 +4,22 @@ import * as React from "react";
 import { useGlobalState } from "hooks/useGlobalState";
 import { useStoreInstance } from "hooks/useStoreInstance";
 import { ObjectViewer } from "components/atoms/ObjectViewer";
+import { useStore } from "react-stores";
 
 export const StoreState: React.FC<{}> = () => {
   const { activeStore } = useGlobalState();
-  const store = useStoreInstance(activeStore);
+  const storeInstance = useStoreInstance(activeStore);
+  const store = useStore(storeInstance.store);
+  const meta = useStore(storeInstance.meta);
+
   return (
     <div css={root}>
       <div css={object}>
-        <ObjectViewer obj={store.store.state} />
+        <ObjectViewer obj={store} />
       </div>
       <div css={metafooter}>
-        <div css={item}>Update times: {store.meta.state.updateTimes}</div>
-        <div css={item}>Version: {store.meta.state.version}</div>
+        <div css={item}>Update times: {meta.updateTimes}</div>
+        <div css={item}>Version: {meta.version}</div>
       </div>
     </div>
   );
@@ -34,6 +38,7 @@ const object = css`
   flex: 1 1 calc(100% - 30px);
   height: calc(100% - 30px);
   border-bottom: var(--border);
+  border-color: var(--border-faded-color);
 `;
 
 const metafooter = css`

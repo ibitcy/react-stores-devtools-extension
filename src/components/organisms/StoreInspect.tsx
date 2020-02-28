@@ -16,14 +16,13 @@ enum ETabs {
 }
 
 export const StoreInspect: React.FC<{}> = () => {
-  const { activeStore } = useGlobalState();
   const store = useIsolatedStore(
     {
       activeTab: ETabs.State
     },
     {
       persistence: true,
-      name: `inspect_${activeStore}`
+      name: `inspect`
     }
   );
 
@@ -74,6 +73,7 @@ const settingsBox = css`
   border-bottom: var(--border);
   background: var(--bg-base-color);
   color: var(--text-base-color);
+  border-color: var(--border-faded-color);
 `;
 
 const root = css`

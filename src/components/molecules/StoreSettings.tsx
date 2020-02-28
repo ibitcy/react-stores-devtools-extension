@@ -7,21 +7,14 @@ import { ObjectViewer } from "components/atoms/ObjectViewer";
 
 export const StoreSettings: React.FC<{}> = () => {
   const { activeStore } = useGlobalState();
-  const store = useStoreInstance(activeStore);
+  const storeInstance = useStoreInstance(activeStore);
   return (
     <div css={root}>
-      <div css={object}>
-        <ObjectViewer flat noHightlight obj={store.options} />
-      </div>
+      <ObjectViewer flat noHightlight obj={storeInstance.options} />
     </div>
   );
 };
 
 const root = css`
-  padding: 4px 8px;
-`;
-
-const object = css`
-  padding-top: 4px;
-  margin-left: -4px;
+  padding: 8px 8px 8px 4px;
 `;

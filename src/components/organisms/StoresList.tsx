@@ -134,6 +134,7 @@ const settingsBox = css`
   flex-grow: 0;
   flex-shrink: 0;
   width: 100%;
+  border-color: var(--border-faded-color);
 `;
 
 const input = css`
