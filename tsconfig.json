@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "downlevelIteration": true,
+    "module": "commonjs",
+    "jsx": "react",
+    "target": "es5",
+    "lib": ["dom", "es6", "es2016", "es2017"],
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noEmitOnError": false,
+    // "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src"
+  },
+  "include": ["./src/**/*", "example/example.ts"]
+}

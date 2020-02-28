@@ -1,0 +1,38 @@
+{
+  "name": "react-stores-inspector",
+  "version": "0.1.0",
+  "dependencies": {
+    "@emotion/core": "^10.0.27",
+    "@types/chrome": "^0.0.95",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
+    "ace-builds": "^1.4.8",
+    "class-transformer": "^0.2.3",
+    "copy-webpack-plugin": "^5.1.1",
+    "file-loader": "^5.1.0",
+    "fork-ts-checker-webpack-plugin": "^4.0.4",
+    "raw-loader": "^4.0.0",
+    "react": "^16.11.0",
+    "react-ace": "^8.0.0",
+    "react-dom": "^16.11.0",
+    "react-stores": "^4.0.2",
+    "reflect-metadata": "^0.1.13",
+    "ts-loader": "^6.2.1",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.5",
+    "url-loader": "^3.0.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
+  },
+  "scripts": {
+    "dev": "webpack --watch --config ./webpack/webpack.config.app.js --mode development --progress",
+    "clean": "rimraf ./extension",
+    "build:app": "webpack --mode production --config ./webpack/webpack.config.app.js",
+    "build:example": "webpack --mode production --config ./webpack/webpack.config.example.js",
+    "build:inject": "webpack --mode production --config ./webpack/webpack.config.inject.js",
+    "build:extension": "webpack --mode production --config ./webpack/webpack.config.extension.js",
+    "build": "yarn clean && mkdir extension && yarn run build:example && yarn run build:inject && yarn run build:extension && yarn run build:app"
+  }
+}
