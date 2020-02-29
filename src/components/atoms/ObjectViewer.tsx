@@ -22,9 +22,18 @@ export const ObjectViewer: React.FC<IProps> = ({ obj, flat, noHightlight }) => {
     return obj;
   }, [obj]);
 
+  const filtered = React.useMemo(() => getFilteredObjKeys(iterable), [
+    iterable
+  ]);
+
+  const hasCollapsible = React.useMemo(
+    () => filtered.some(key => isTypeCollapsible(iterable[key])),
+    [filtered]
+  );
+
   return (
-    <div css={[root, flat && flatRoot]}>
-      {getFilteredObjKeys(iterable).map((key: any) => (
+    <div css={[root, flat || (!hasCollapsible && flatRoot)]}>
+      {filtered.map((key: any) => (
         <Item
           value={iterable[key]}
           key={key}
@@ -44,17 +53,7 @@ interface IItemProps {
 
 const Item: React.FC<IItemProps> = ({ value, keyString, noHightlight }) => {
   const [open, setOpen] = React.useState(false);
-  const isCollapsible = React.useMemo(() => {
-    if (Array.isArray(value)) {
-      return Boolean(value.length);
-    }
-    if (isMap(value)) {
-      return Boolean(value.size);
-    }
-    if (typeof value === "object" && value !== null) {
-      return Boolean(Object.keys(value).length);
-    }
-  }, [value]);
+  const isCollapsible = React.useMemo(() => isTypeCollapsible(value), [value]);
 
   return (
     <React.Fragment>
@@ -71,7 +70,7 @@ const Item: React.FC<IItemProps> = ({ value, keyString, noHightlight }) => {
         }}
       >
         <span css={itemKey}>
-          <span className="value">{keyString}</span>:
+          <span className="value"> {keyString}</span>:
         </span>
         <span css={valueCn}>
           <Hightlighter disable={open || noHightlight} deepEqual watch={value}>
@@ -83,6 +82,24 @@ const Item: React.FC<IItemProps> = ({ value, keyString, noHightlight }) => {
     </React.Fragment>
   );
 };
+
+function isTypeCollapsible(value: any) {
+  if (Array.isArray(value)) {
+    return Boolean(value.length);
+  }
+  if (isMap(value)) {
+    return Boolean(value.size);
+  }
+  if (typeof value === "object" && value !== null) {
+    return (
+      Boolean(Object.keys(value).length) &&
+      value.$prev === undefined &&
+      value.$current === undefined
+    );
+  }
+
+  return false;
+}
 
 function domForType(value: any, open: boolean) {
   if (
@@ -166,6 +183,9 @@ function simpleType(
   }
 
   if (typeof value === "object") {
+    if (value.hasOwnProperty("$prev") && value.hasOwnProperty("$current")) {
+      return <span css={uptaded}>»</span>;
+    }
     return (
       <span>
         {!value["__constructorName"] ? (
@@ -236,6 +256,14 @@ function objectType(
 ): React.ReactNode {
   if (open) {
     return obj.__constructorName && <span>{obj.__constructorName} </span>;
+  }
+  if (obj.hasOwnProperty("$prev") && obj.hasOwnProperty("$current")) {
+    return (
+      <span>
+        <span css={prevValue}>{simpleType(obj.$prev)}</span>
+        <span css={currentValue}>⇨ {simpleType(obj.$current)}</span>
+      </span>
+    );
   }
   return (
     <span>
@@ -364,4 +392,25 @@ const greyCn = css`
 
 const redCn = css`
   color: var(--code-red);
+`;
+
+const prevValue = css`
+  font-style: italic;
+  margin-right: 5px;
+  opacity: 0.5;
+`;
+
+const currentValue = css``;
+const uptaded = css`
+  width: 10px;
+  text-align: center;
+  height: 10px;
+  line-height: 0;
+  position: relative;
+  top: -1px;
+  border-radius: 2px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--box-bg-color);
 `;

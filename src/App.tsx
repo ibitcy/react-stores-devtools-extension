@@ -8,6 +8,7 @@ import { useInstance } from "hooks/useInstance";
 import * as React from "react";
 import { useGlobalState } from "hooks/useGlobalState";
 import { StoreHistory } from "components/organisms/StoreHistory";
+import { useStore } from "react-stores";
 
 interface IProps {}
 
@@ -15,13 +16,13 @@ export const App: React.FC<IProps> = () => {
   const instance = useInstance();
   const { activeStore } = useGlobalState();
 
-  const storesKeys = instance ? Array.from(instance.stores.keys()) : [];
+  const { list } = useStore(instance.storesList);
 
   return (
     <React.Fragment>
-      {storesKeys.length === 0 ? (
+      {list.length === 0 ? (
         <Loader
-          message="No store found."
+          message="No stores found."
           postfix={
             <span css={description}>
               Make sure to use react-stores v5.0.0 or higher.
@@ -36,7 +37,7 @@ export const App: React.FC<IProps> = () => {
         />
       ) : (
         <Layout name={instance.port.name}>
-          <StoreList storesKeys={storesKeys} />
+          <StoreList storesKeys={list} />
           {activeStore && instance?.stores?.has(activeStore) && (
             <StoreInspect />
           )}

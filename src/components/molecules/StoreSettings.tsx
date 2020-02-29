@@ -1,13 +1,11 @@
 /* @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import * as React from "react";
-import { useGlobalState } from "hooks/useGlobalState";
 import { useStoreInstance } from "hooks/useStoreInstance";
 import { ObjectViewer } from "components/atoms/ObjectViewer";
 
 export const StoreSettings: React.FC<{}> = () => {
-  const { activeStore } = useGlobalState();
-  const storeInstance = useStoreInstance(activeStore);
+  const storeInstance = useStoreInstance();
   return (
     <div css={root}>
       <ObjectViewer flat noHightlight obj={storeInstance.options} />

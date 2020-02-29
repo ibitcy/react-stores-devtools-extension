@@ -1,14 +1,12 @@
 /* @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import * as React from "react";
-import { useGlobalState } from "hooks/useGlobalState";
 import { useStoreInstance } from "hooks/useStoreInstance";
 import { ObjectViewer } from "components/atoms/ObjectViewer";
 import { useStore } from "react-stores";
 
 export const StoreState: React.FC<{}> = () => {
-  const { activeStore } = useGlobalState();
-  const storeInstance = useStoreInstance(activeStore);
+  const storeInstance = useStoreInstance();
   const store = useStore(storeInstance.store);
   const meta = useStore(storeInstance.meta);
 
@@ -32,7 +30,7 @@ const root = css`
 `;
 
 const object = css`
-  padding: 4px 8px;
+  padding: 8px;
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1 1 calc(100% - 30px);

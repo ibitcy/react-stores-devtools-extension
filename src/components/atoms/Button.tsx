@@ -3,7 +3,7 @@ import * as React from "react";
 import { css, jsx } from "@emotion/core";
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  theme?: "tab";
+  theme?: "tab" | "tab_light";
 }
 
 export const Button: React.FC<IProps> = ({ theme, ...props }) => {
@@ -21,6 +21,9 @@ const button = css`
   border-radius: 3px;
   border: var(--border);
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover:not([disabled]) {
     background: var(--bg-base-color);
@@ -48,6 +51,17 @@ const themes = {
         background: black;
       }
       background: black;
+    }
+  `,
+  tab_light: css`
+    font-weight: normal;
+    border: none;
+    padding: 8px;
+    border-radius: 0;
+    opacity: 0.5;
+
+    &:hover:not([disabled]):not(.active) {
+      opacity: 1;
     }
   `
 };

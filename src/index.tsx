@@ -1,30 +1,26 @@
 import { App } from "App";
 import { Button } from "components/atoms/Button";
 import { Loader } from "components/atoms/Loader";
-import { IPagesStore } from "extension/background";
+import { TInstances } from "extension/background";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Store } from "react-stores";
 import { GlobalProvider } from "GlobalProvider";
 import { TIncomeDispatch } from "types";
 
 export type TInstanse = Window & {
-  pagesStores: Store<IPagesStore>;
+  instances: TInstances;
 };
 
 let interval = null;
 
-chrome.runtime.getBackgroundPage((instance: TInstanse) => {
-  (window as any).bg = instance;
+chrome.runtime.getBackgroundPage((bg: TInstanse) => {
+  (window as any).bg = bg;
 
   function checkConnected() {
-    const { pagesStores } = instance;
-    const connected = pagesStores.state.instances.has(
-      chrome.devtools.inspectedWindow.tabId
-    );
+    const connected = bg.instances.has(chrome.devtools.inspectedWindow.tabId);
 
     if (connected) {
-      clearInterval(interval);
+      clearTimeout(interval);
       ReactDOM.render(
         <GlobalProvider>
           <App />
@@ -47,7 +43,7 @@ chrome.runtime.getBackgroundPage((instance: TInstanse) => {
         />,
         document.getElementById("app")
       );
-      interval = setInterval(checkConnected, 1000);
+      interval = setTimeout(checkConnected, 1000);
     }
   }
 
@@ -55,7 +51,7 @@ chrome.runtime.getBackgroundPage((instance: TInstanse) => {
 });
 
 const sendDataToPage = (data: TIncomeDispatch) => {
-  ((window as any).bg as TInstanse).pagesStores.state.instances
+  ((window as any).bg as TInstanse).instances
     .get(chrome.devtools.inspectedWindow.tabId)
     .port.postMessage(data);
 };

@@ -1,10 +1,10 @@
 import { Store } from "react-stores";
-import { IPagesStore } from "extension/background";
 import { TIncomeDispatch } from "types";
+import { TInstances } from "extension/background";
 
 declare global {
   const bg: Window & {
-    pagesStores: Store<IPagesStore>;
+    instances: TInstances;
   };
   const sendDataToPage: (data: TIncomeDispatch) => void;
 }

@@ -70,6 +70,7 @@ export const Layout: React.FC<IProps> = ({ name, children }) => {
 const root = css`
   display: flex;
   height: 100%;
+  width: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -78,22 +79,22 @@ const root = css`
   align-items: stretch;
 
   > *:nth-of-type(1) {
-    flex: 0 0 250px;
+    flex: 0 0 180px;
     position: relative;
     overflow: auto;
   }
 
   > *:nth-of-type(2) {
-    flex: 1 1 auto;
-    min-width: 400px;
+    flex: 1 10 auto;
+    min-width: 100px;
     border-left: var(--border);
     overflow: auto;
     position: relative;
   }
 
   > *:nth-of-type(3) {
-    flex: 0 0 auto;
-    min-width: 400px;
+    flex: 0 1 auto;
+    min-width: 100px;
     border-left: var(--border);
     overflow: auto;
   }
@@ -111,4 +112,5 @@ const dropZone = css`
   width: 10px;
   cursor: ew-resize;
   user-select: none;
+  z-index: 100000;
 `;

@@ -7,6 +7,7 @@ import { mergeClassNames } from "utils";
 import { Cross } from "components/atoms/Cross";
 import { Input } from "components/atoms/Input";
 import { useIsolatedStore, useStore } from "react-stores";
+import { Button } from "components/atoms/Button";
 
 interface IProps {
   activeIndex: number;
@@ -19,21 +20,25 @@ export const StoreHistoryList: React.FC<IProps> = ({
 }) => {
   const storeUI = useIsolatedStore(
     {
-      filter: ""
+      filter: "",
+      sort: false
     },
     {
       persistence: true,
       name: `history`
     }
   );
-  const { activeStore } = useGlobalState();
-  const storeInstance = useStoreInstance(activeStore);
+  const storeInstance = useStoreInstance();
   const { items } = useStore(storeInstance.history);
 
   const filteredItems = React.useMemo(
     () =>
       !storeUI.state.filter
-        ? items
+        ? items.sort((a, b) =>
+            storeUI.state.sort
+              ? a.timestamp - b.timestamp
+              : b.timestamp - a.timestamp
+          )
         : items
             .filter(
               item =>
@@ -51,26 +56,43 @@ export const StoreHistoryList: React.FC<IProps> = ({
                   .indexOf(storeUI.state.filter.toLowerCase())
               );
             }),
-    [items, storeUI.state.filter]
+    [items, storeUI.state.filter, storeUI.state.sort]
   );
   return (
     <div css={layout}>
       <div css={settingsBox}>
-        <Input
-          css={input}
-          onChange={event =>
-            storeUI.setState({ filter: (event.target as any).value })
+        <Button
+          theme="tab_light"
+          onClick={() =>
+            storeUI.setState({
+              sort: !storeUI.state.sort
+            })
           }
-          placeholder="Filter actions"
-          defaultValue={storeUI.state.filter}
-        />
-        <button
-          css={[reset, storeUI.state.filter && visibleReset]}
-          onClick={() => storeUI.setState({ filter: "" })}
-          title="Clear filter"
+          title="Set sorting events by timestamp"
         >
-          <Cross />
-        </button>
+          {storeUI.state.sort ? <span>&#9660;</span> : <span>&#9650;</span>}
+        </Button>
+        <div
+          style={{
+            display: "flex"
+          }}
+        >
+          <Input
+            css={input}
+            onChange={event =>
+              storeUI.setState({ filter: (event.target as any).value })
+            }
+            placeholder="Filter actions"
+            defaultValue={storeUI.state.filter}
+          />
+          <button
+            css={[reset, storeUI.state.filter && visibleReset]}
+            onClick={() => storeUI.setState({ filter: "" })}
+            title="Clear filter"
+          >
+            <Cross />
+          </button>
+        </div>
       </div>
       <div css={root}>
         {filteredItems.map((historyItem, index, array) => {
@@ -128,7 +150,7 @@ const root = css`
 
 const settingsBox = css`
   display: flex;
-  padding: 0 8px;
+  padding: 0 8px 0 0;
   height: 30px;
   align-items: center;
   border-bottom: var(--border);
@@ -136,7 +158,8 @@ const settingsBox = css`
   background: var(--bg-base-color);
   color: var(--text-base-color);
   flex: 0 0 30px;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-content: center;
 `;
 
 const historyItemCn = css`

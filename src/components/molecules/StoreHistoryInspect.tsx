@@ -4,12 +4,11 @@ import * as React from "react";
 import { useGlobalState } from "hooks/useGlobalState";
 import { useStoreInstance } from "hooks/useStoreInstance";
 import { mergeClassNames } from "utils";
-import { Cross } from "components/atoms/Cross";
-import { Input } from "components/atoms/Input";
 import { useIsolatedStore, useStore } from "react-stores";
 import { Button } from "components/atoms/Button";
 import { ObjectViewer } from "components/atoms/ObjectViewer";
 import { TraceViewer } from "./TraceViewer";
+import { StateDiff } from "./StateDiff";
 
 interface IProps {
   activeIndex: number;
@@ -33,11 +32,11 @@ export const StoreHistoryInspect: React.FC<IProps> = ({ activeIndex }) => {
     }
   );
   const { activeStore } = useGlobalState();
-  const storeInstance = useStoreInstance(activeStore);
+  const storeInstance = useStoreInstance();
   const { items } = useStore(storeInstance.history);
   const historyItem = React.useMemo(() => items[activeIndex], [
     activeIndex,
-    items
+    activeStore
   ]);
 
   React.useEffect(() => {
@@ -80,7 +79,9 @@ export const StoreHistoryInspect: React.FC<IProps> = ({ activeIndex }) => {
         {storeUI.state.activeTab === ETabs.State && (
           <ObjectViewer noHightlight obj={historyItem.state} />
         )}
-        {storeUI.state.activeTab === ETabs.Diff && <span>here a diff</span>}
+        {storeUI.state.activeTab === ETabs.Diff && activeIndex > 0 && (
+          <StateDiff activeIndex={activeIndex} />
+        )}
         {storeUI.state.activeTab === ETabs.Trace && (
           <TraceViewer traceList={historyItem.trace} />
         )}

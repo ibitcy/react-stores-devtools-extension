@@ -1,8 +1,8 @@
 import { useInstance } from "./useInstance";
+import { useGlobalState } from "./useGlobalState";
 
-export const useStoreInstance = (key: string) => {
+export const useStoreInstance = () => {
+  const { activeStore } = useGlobalState();
   const instance = useInstance();
-  const store = instance.stores.get(key);
-
-  return store;
+  return instance.stores.get(activeStore);
 };

@@ -138,7 +138,7 @@ const settingsBox = css`
 `;
 
 const input = css`
-  width: 150px;
+  width: 130px;
 `;
 
 const reset = css`
@@ -159,6 +159,7 @@ const reset = css`
   position: relative;
   transform: translateX(calc(-100% - 4px));
   outline: none;
+  margin-right: -12px;
   color: white;
   font-size: 10px;
 `;

@@ -17,37 +17,27 @@ export type TStoreInstance = {
 interface IPageInstance {
   port: chrome.runtime.Port;
   stores: Map<string, TStoreInstance>;
+  storesList: Store<{ list: string[] }>;
 }
 
-export interface IPagesStore {
-  instances: Map<number, IPageInstance>;
-}
+export type TInstances = Map<number, IPageInstance>;
 
-const pagesStores = new Store<IPagesStore>({
-  instances: new Map()
-});
+const instances: Map<number, IPageInstance> = new Map();
 
 chrome.runtime.onConnect.addListener(function(port) {
   const tabId = port.sender.tab.id;
-  const nextMap = new Map(pagesStores.state.instances);
-  nextMap.set(tabId, {
+  console.log("add listener");
+  instances.set(tabId, {
     port,
-    stores: new Map()
-  });
-
-  pagesStores.setState({
-    instances: nextMap
+    stores: new Map(),
+    storesList: new Store({ list: [] })
   });
 
   port.onMessage.addListener(messageHandler);
 
   port.onDisconnect.addListener(function(port) {
     port.onMessage.removeListener(messageHandler);
-    const nextMap = new Map(pagesStores.state.instances);
-    nextMap.delete(tabId);
-    pagesStores.setState({
-      instances: nextMap
-    });
+    instances.delete(tabId);
   });
 });
 
@@ -55,15 +45,13 @@ const messageHandler = function(
   message: TOutDispatch,
   port: chrome.runtime.Port
 ) {
-  const nextMap = new Map(pagesStores.state.instances);
-  const nextInstance = nextMap.get(port.sender.tab.id);
-  const nextStores = new Map(nextInstance.stores);
-  let update = true;
+  const pageInstance = instances.get(port.sender.tab.id);
 
   switch (message.action) {
     case EAction.CREATE_NEW_STORE: {
       const store = new Store(decodeData(message.payload.initialState));
-      nextStores.set(message.payload.name, {
+
+      pageInstance.stores.set(message.payload.name, {
         store: new Store(decodeData(message.payload.initialState)),
         options: message.payload.options,
         history: new Store({
@@ -82,17 +70,23 @@ const messageHandler = function(
           version: message.payload.meta.version
         })
       });
+      pageInstance.storesList.setState({
+        list: [...pageInstance.storesList.state.list, message.payload.name]
+      });
       break;
     }
 
     case EAction.REMOVE_STORE: {
-      nextStores.delete(message.payload.name);
+      pageInstance.storesList.setState({
+        list: [...pageInstance.storesList.state.list, message.payload.name]
+      });
+      pageInstance.stores.delete(message.payload.name);
       break;
     }
 
     case EAction.SET_STATE: {
       const nextState = decodeData(message.payload.nextState);
-      const storeInstance = nextStores.get(message.payload.name);
+      const storeInstance = pageInstance.stores.get(message.payload.name);
 
       storeInstance.store.setState(nextState);
       storeInstance.meta.setState({
@@ -111,22 +105,9 @@ const messageHandler = function(
         ]
       });
 
-      update = false;
       break;
     }
-
-    default: {
-      update = false;
-    }
-  }
-  if (update) {
-    nextInstance.stores = nextStores;
-    nextMap.set(port.sender.tab.id, nextInstance);
-
-    pagesStores.setState({
-      instances: nextMap
-    });
   }
 };
 
-window["pagesStores"] = pagesStores;
+window["instances"] = instances;
