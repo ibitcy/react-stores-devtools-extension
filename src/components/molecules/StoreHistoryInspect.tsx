@@ -9,6 +9,7 @@ import { Input } from "components/atoms/Input";
 import { useIsolatedStore, useStore } from "react-stores";
 import { Button } from "components/atoms/Button";
 import { ObjectViewer } from "components/atoms/ObjectViewer";
+import { TraceViewer } from "./TraceViewer";
 
 interface IProps {
   activeIndex: number;
@@ -50,22 +51,27 @@ export const StoreHistoryInspect: React.FC<IProps> = ({ activeIndex }) => {
   return (
     <div css={layout}>
       <div css={settingsBox}>
-        {Object.keys(ETabs).map(key => (
-          <Button
-            key={key}
-            theme="tab"
-            className={mergeClassNames([
-              storeUI.state.activeTab === ETabs[key] && "active"
-            ])}
-            onClick={() => {
-              storeUI.setState({
-                activeTab: ETabs[key]
-              });
-            }}
-          >
-            {ETabs[key]}
-          </Button>
-        ))}
+        {Object.keys(ETabs).map(key => {
+          if (activeIndex === 0 && key !== ETabs.State && key !== ETabs.Trace) {
+            return null;
+          }
+          return (
+            <Button
+              key={key}
+              theme="tab"
+              className={mergeClassNames([
+                storeUI.state.activeTab === ETabs[key] && "active"
+              ])}
+              onClick={() => {
+                storeUI.setState({
+                  activeTab: ETabs[key]
+                });
+              }}
+            >
+              {ETabs[key]}
+            </Button>
+          );
+        })}
       </div>
       <div css={root}>
         {storeUI.state.activeTab === ETabs.Payload && (
@@ -75,7 +81,9 @@ export const StoreHistoryInspect: React.FC<IProps> = ({ activeIndex }) => {
           <ObjectViewer noHightlight obj={historyItem.state} />
         )}
         {storeUI.state.activeTab === ETabs.Diff && <span>here a diff</span>}
-        {storeUI.state.activeTab === ETabs.Trace && <span>here a trace</span>}
+        {storeUI.state.activeTab === ETabs.Trace && (
+          <TraceViewer traceList={historyItem.trace} />
+        )}
       </div>
     </div>
   );

@@ -202,9 +202,9 @@ const timeCn = css`
 const milliseconds = css`
   margin-left: 5px;
   padding: 3px 6px;
-  background: var(--bg-light-color);
+  background: var(--box-bg-color);
   border-radius: 3px;
-  color: var(--text-dark-color);
+  color: var(--text-base-color);
   letter-spacing: 0.5px;
   text-align: right;
   width: 32px;

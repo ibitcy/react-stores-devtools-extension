@@ -1,13 +1,6 @@
 import { Store, StoreOptions } from "react-stores";
-import { TOutDispatch, EAction } from "types";
+import { TOutDispatch, EAction, THistoryItem } from "types";
 import { decodeData } from "utils/encoder";
-
-type THistoryItem = {
-  action: string;
-  state: Record<any, any>;
-  payload: Record<any, any>;
-  timestamp: number;
-};
 
 export type TStoreInstance = {
   store: Store<unknown>;
@@ -79,7 +72,8 @@ const messageHandler = function(
               action: "@init",
               state: { ...store.state },
               timestamp: Date.now(),
-              payload: {}
+              payload: {},
+              trace: message.payload.trace
             }
           ]
         }),
@@ -111,7 +105,8 @@ const messageHandler = function(
             action: message.payload.actionName ?? `@update_${Date.now()}`,
             state: { ...(storeInstance.store.state as any) },
             payload: nextState,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            trace: message.payload.trace
           }
         ]
       });

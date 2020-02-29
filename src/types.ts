@@ -1,5 +1,21 @@
 import { StoreOptions } from "react-stores";
 
+export interface ITrace {
+  line: number;
+  column: number;
+  file: string;
+  functionName: string;
+  sourceMap?: Omit<ITrace, "sourceMap">;
+}
+
+export type THistoryItem = {
+  action: string;
+  state: Record<any, any>;
+  payload: Record<any, any>;
+  timestamp: number;
+  trace: ITrace[];
+};
+
 export enum EAction {
   SET_STATE,
   RESET_STATE,
@@ -30,6 +46,7 @@ export type TOutDispatch =
         name: string;
         initialState: string;
         options: StoreOptions;
+        trace: ITrace[];
         meta: {
           version: string;
         };
@@ -39,6 +56,7 @@ export type TOutDispatch =
       action: EAction.SET_STATE;
       payload: {
         name: string;
+        trace: ITrace[];
         actionName?: string;
         nextState: string;
       };
@@ -46,6 +64,7 @@ export type TOutDispatch =
   | {
       action: EAction.REMOVE_STORE;
       payload: {
+        trace: ITrace[];
         name: string;
       };
     };

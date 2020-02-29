@@ -54,8 +54,10 @@ chrome.runtime.getBackgroundPage((instance: TInstanse) => {
   checkConnected();
 });
 
-window["sendDataToPage"] = (data: TIncomeDispatch) => {
+const sendDataToPage = (data: TIncomeDispatch) => {
   ((window as any).bg as TInstanse).pagesStores.state.instances
     .get(chrome.devtools.inspectedWindow.tabId)
     .port.postMessage(data);
 };
+
+window["sendDataToPage"] = sendDataToPage;

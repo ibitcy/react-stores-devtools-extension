@@ -83,6 +83,7 @@ setTimeout(() => {
       pro,
       classFuncion: new Profile().method,
       symbol: Symbol("foo"),
+      numberString: "1582668000650",
       date: new Date(1582668000650),
       regExp: /[\d]/g,
       func: (value: number) => value.toString(),
@@ -215,6 +216,27 @@ setTimeout(() => {
       $actionName: "@group2/sup"
     });
   }, 4000);
+
+  function zad() {
+    StaticClass.method();
+  }
+
+  class StaticClass {
+    public static method() {
+      obj.zzz();
+    }
+  }
+
+  const obj = {
+    zzz: () => {
+      store.setState({
+        zad: "long",
+        $actionName: "@longTrace"
+      });
+    }
+  };
+
+  zad();
 }, 5000);
 
 window["store"] = Store;

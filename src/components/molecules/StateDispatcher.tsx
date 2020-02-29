@@ -10,7 +10,6 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/keybinding-vscode";
 import { Button } from "components/atoms/Button";
 import { encodeData } from "utils/encoder";
-import { useInstance } from "hooks/useInstance";
 import { EAction } from "types";
 
 const note = `// You mast return an object from dispatcher
@@ -68,7 +67,10 @@ export const StateDispatcher: React.FC<IProps> = ({ onDispatch }) => {
   function dispatch() {
     try {
       const object = new Function(`return (function() {${dispatchObj}})()`)();
-      const state = encodeData(object);
+      const state = encodeData({
+        $actionName: "@dispatchFromDevTool",
+        ...object
+      });
       sendDataToPage({
         action: EAction.SET_STATE,
         payload: {
