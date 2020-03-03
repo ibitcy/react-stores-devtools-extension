@@ -41,16 +41,41 @@ const themes = {
     border: none;
     padding: 7px 12px;
     border-radius: 0;
+    position: relative;
 
     &:hover:not([disabled]):not(.active) {
-      background: var(--bg-dark-color);
+      background: var(
+        ${chrome.devtools.panels.themeName === "dark"
+          ? "--bg-dark-color"
+          : "--bg-tab-hover-color"}
+      );
     }
 
     &.active {
       &:hover {
-        background: black;
+        background: var(
+          ${chrome.devtools.panels.themeName === "dark"
+            ? "--bg-tab-hover-color"
+            : ""}
+        );
       }
-      background: black;
+      background: var(
+        ${chrome.devtools.panels.themeName === "dark"
+          ? "--bg-tab-hover-color"
+          : ""}
+      );
+
+      &:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-bottom: 2px solid var(--hover-color);
+        display: ${chrome.devtools.panels.themeName === "dark"
+          ? "none"
+          : "block"};
+      }
     }
   `,
   tab_light: css`
@@ -58,10 +83,10 @@ const themes = {
     border: none;
     padding: 8px;
     border-radius: 0;
-    opacity: 0.5;
+    opacity: ${chrome.devtools.panels.themeName === "dark" ? "0.5" : "1"};
 
     &:hover:not([disabled]):not(.active) {
-      opacity: 1;
+      opacity: ${chrome.devtools.panels.themeName !== "dark" ? "0.5" : "1"};
     }
   `
 };

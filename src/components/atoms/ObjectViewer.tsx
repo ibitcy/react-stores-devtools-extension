@@ -413,4 +413,9 @@ const uptaded = css`
   justify-content: center;
   align-items: center;
   background: var(--box-bg-color);
+  color: var(
+    ${chrome.devtools.panels.themeName === "dark"
+      ? "--text-base-color"
+      : "--text-inverse"}
+  );
 `;

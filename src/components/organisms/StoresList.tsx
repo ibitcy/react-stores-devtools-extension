@@ -1,14 +1,14 @@
 /* @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import * as React from "react";
-import { useGlobalState } from "hooks/useGlobalState";
-import { useEffectOnce } from "hooks/useEffectOnce";
-import { mergeClassNames } from "utils";
-import { Input } from "components/atoms/Input";
 import { Atom } from "components/atoms/Atom";
-import { Cross } from "components/atoms/Cross";
-import { TStoreListItem } from "types";
 import { HeadDivider } from "components/atoms/HeadDivider";
+import { Input } from "components/atoms/Input";
+import { ResetBtn } from "components/atoms/ResetBtn";
+import { useEffectOnce } from "hooks/useEffectOnce";
+import { useGlobalState } from "hooks/useGlobalState";
+import * as React from "react";
+import { TStoreListItem } from "types";
+import { mergeClassNames } from "utils";
 
 interface IProps {
   storesList: TStoreListItem[];
@@ -71,13 +71,11 @@ export const StoreList: React.FC<IProps> = ({ storesList }) => {
           placeholder="Search"
           defaultValue={filter}
         />
-        <button
-          css={[reset, filter && visibleReset]}
-          onClick={() => setFilter("")}
+        <ResetBtn
           title="Clear filter"
-        >
-          <Cross />
-        </button>
+          onClick={() => setFilter("")}
+          visible={Boolean(filter)}
+        />
       </div>
       <div css={root}>
         {!filteredItems.length && <div css={message}>Stores not found</div>}
@@ -130,44 +128,12 @@ const settingsBox = css`
   flex-grow: 0;
   flex-shrink: 0;
   width: 100%;
-  align-items: stretch;
+  align-items: center;
   border-color: var(--border-faded-color);
 `;
 
 const input = css`
   width: 130px;
-`;
-
-const reset = css`
-  width: 12px;
-  padding: 0;
-  height: 12px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  background: var(--text-base-color);
-  opacity: 0;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  background-size: 10px;
-  pointer-events: none;
-  border-radius: 50%;
-  position: relative;
-  transform: translateX(calc(-100% - 4px));
-  outline: none;
-  margin-right: -12px;
-  color: white;
-  font-size: 10px;
-`;
-
-const visibleReset = css`
-  pointer-events: all;
-  opacity: 0.8;
-
-  &:hover {
-    opacity: 1;
-  }
 `;
 
 const message = css`
@@ -199,6 +165,12 @@ const storeItemCn = css`
 
   &.active {
     background-color: var(--hover-color);
+
+    color: var(
+      ${chrome.devtools.panels.themeName === "dark"
+        ? "--text-base-color"
+        : "--text-inverse"}
+    );
   }
 `;
 

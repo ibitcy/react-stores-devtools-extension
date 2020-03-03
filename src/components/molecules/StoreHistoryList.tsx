@@ -7,6 +7,7 @@ import { Cross } from "components/atoms/Cross";
 import { Input } from "components/atoms/Input";
 import { useIsolatedStore, useStore } from "react-stores";
 import { Button } from "components/atoms/Button";
+import { ResetBtn } from "components/atoms/ResetBtn";
 
 interface IProps {
   activeIndex: number;
@@ -103,16 +104,15 @@ export const StoreHistoryList: React.FC<IProps> = ({
             placeholder="Filter actions"
             defaultValue={storeUI.state.filter}
           />
-          <button
-            css={[reset, storeUI.state.filter && visibleReset]}
+          <ResetBtn
+            visible={Boolean(storeUI.state.filter)}
             onClick={() => storeUI.setState({ filter: "" })}
             title="Clear filter"
-          >
-            <Cross />
-          </button>
+          />
         </div>
       </div>
       <div css={[root]}>
+        {!filteredItems.length && <div css={message}>Actions not found</div>}
         {filteredItems.map((historyItem, index, array) => {
           return (
             <div
@@ -172,6 +172,14 @@ const settingsBox = css`
   align-content: center;
 `;
 
+const message = css`
+  color: var(--text-fade-color);
+  font-style: italic;
+  margin-bottom: 5px;
+  padding: 4px 8px;
+  text-align: center;
+`;
+
 const historyItemCn = css`
   padding: 8px 8px;
   color: var(--text-base-color);
@@ -195,38 +203,6 @@ const input = css`
   width: 150px;
 `;
 
-const reset = css`
-  width: 12px;
-  padding: 0;
-  height: 12px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  background: var(--text-base-color);
-  opacity: 0;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  background-size: 10px;
-  pointer-events: none;
-  border-radius: 50%;
-  position: relative;
-  transform: translateX(calc(-100% - 4px));
-  outline: none;
-  color: white;
-  font-size: 10px;
-  margin-right: -12px;
-`;
-
-const visibleReset = css`
-  pointer-events: all;
-  opacity: 0.8;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
-
 const nameCn = css``;
 const timeCn = css`
   color: var(--text-fade-color);
@@ -237,7 +213,11 @@ const milliseconds = css`
   padding: 3px 6px;
   background: var(--box-bg-color);
   border-radius: 3px;
-  color: var(--text-base-color);
+  color: var(
+    ${chrome.devtools.panels.themeName === "dark"
+      ? "--text-base-color"
+      : "--text-inverse"}
+  );
   letter-spacing: 0.5px;
   text-align: right;
   width: 32px;
