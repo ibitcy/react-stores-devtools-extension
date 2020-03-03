@@ -25,7 +25,7 @@ const fromPlainUser = {
 setTimeout(() => {
   const store = new Store(
     {
-      zad: "name"
+      test: "name"
     },
     {
       persistence: true
@@ -37,7 +37,7 @@ setTimeout(() => {
   };
   const storeOld = new Store4(
     {
-      zad: "name",
+      test: "name",
       newField: Date.now()
     },
     {
@@ -57,7 +57,7 @@ setTimeout(() => {
     }
     public surname = null;
     public method = (a, b) => {};
-    public name = "zad";
+    public name = "test";
   }
 
   const pro = new Profile("surname");
@@ -171,6 +171,52 @@ setTimeout(() => {
       name: "Big store"
     }
   );
+
+  setTimeout(() => {
+    store2.setState({
+      string: "name_test",
+      $actionName: "@group/myfirst"
+    });
+  }, 1000);
+  setTimeout(() => {
+    store2.setState({
+      string: "name_new",
+      $actionName: "@group/mysecond"
+    });
+  }, 1000);
+  setTimeout(() => {
+    store2.setState({
+      string: "name_new",
+      $actionName: "@group2/sup"
+    });
+  }, 3000);
+  setTimeout(() => {
+    store2.setState({
+      string: "name_ne_name",
+      $actionName: "@group2/sup"
+    });
+  }, 4000);
+
+  function test() {
+    StaticClass.method();
+  }
+
+  class StaticClass {
+    public static method() {
+      obj.zzz();
+    }
+  }
+
+  const obj = {
+    zzz: () => {
+      store2.setState({
+        string: "long",
+        $actionName: "@longTrace"
+      });
+    }
+  };
+
+  test();
   const state = store2.state;
   setInterval(() => {
     storeOld.setState({
@@ -192,56 +238,10 @@ setTimeout(() => {
 setTimeout(() => {
   const store = new Store(
     {
-      zad: "name"
+      test: "name"
     },
     { name: "Delayed store", live: true }
   );
-
-  setTimeout(() => {
-    store.setState({
-      zad: "name_test",
-      $actionName: "@group/myfirst"
-    });
-  }, 1000);
-  setTimeout(() => {
-    store.setState({
-      zad: "name_new",
-      $actionName: "@group/mysecond"
-    });
-  }, 1000);
-  setTimeout(() => {
-    store.setState({
-      zad: "name_new",
-      $actionName: "@group2/sup"
-    });
-  }, 3000);
-  setTimeout(() => {
-    store.setState({
-      zad: "name_ne_name",
-      $actionName: "@group2/sup"
-    });
-  }, 4000);
-
-  function zad() {
-    StaticClass.method();
-  }
-
-  class StaticClass {
-    public static method() {
-      obj.zzz();
-    }
-  }
-
-  const obj = {
-    zzz: () => {
-      store.setState({
-        zad: "long",
-        $actionName: "@longTrace"
-      });
-    }
-  };
-
-  zad();
 }, 5000);
 
 window["store"] = Store;

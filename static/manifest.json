@@ -1,7 +1,7 @@
 {
-  "name": "ReactStores Inspector",
-  "version": "1.1",
-  "description": "A bare-bones example of communication between devtools and an inspected page",
+  "name": "React Stores Devtools Extension",
+  "version": "1.0.0",
+  "description": "Better experience for debug your react stores with chrome devtools extension",
   "devtools_page": "main.html",
   "background": {
     "scripts": ["background.js"],

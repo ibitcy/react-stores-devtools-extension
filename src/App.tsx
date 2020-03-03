@@ -28,7 +28,10 @@ export const App: React.FC<IProps> = () => {
               Make sure to use react-stores v5.0.0 or higher.
               <br />
               For old version of react-stores connect with devtool followed{" "}
-              <a css={link} href="#">
+              <a
+                css={link}
+                href="https://ibitcy.github.io/react-stores-devtools-extension/README.md#for-old-versions"
+              >
                 instruction
               </a>
               .
