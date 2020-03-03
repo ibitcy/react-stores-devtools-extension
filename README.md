@@ -13,7 +13,7 @@ Debug your react stores with chrome devtools extension.
 - 📦 Works with isolated stores
 - 🎨 Familiar native chrome themes
 
-![screen_light](https://ibitcy.github.io/react-stores-devtools-extension/example/screen_light.png)
+![screen_light](https://github.com/konstantin24121/react-stores-devtools-extension/example/screen_light.png)
 
 ## How to install
 
@@ -54,4 +54,4 @@ window["__REACT_STORES_INSPECTOR__"].attachStore(
 );
 ```
 
-![screen_dark](https://ibitcy.github.io/react-stores-devtools-extension/example/screen_dark.png)
+![screen_dark](https://github.com/konstantin24121/react-stores-devtools-extension/example/screen_dark.png)

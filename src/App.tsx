@@ -30,7 +30,7 @@ export const App: React.FC<IProps> = () => {
               For old version of react-stores connect with devtool followed{" "}
               <a
                 css={link}
-                href="https://ibitcy.github.io/react-stores-devtools-extension/README.md#for-old-versions"
+                href="https://github.com/konstantin24121/react-stores-devtools-extension/README.md#for-old-versions"
               >
                 instruction
               </a>
