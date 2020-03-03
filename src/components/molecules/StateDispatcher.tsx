@@ -42,7 +42,9 @@ export const StateDispatcher: React.FC<IProps> = ({ onDispatch }) => {
     <div css={root}>
       <AceEditor
         mode="javascript"
-        theme="monokai"
+        theme={
+          chrome.devtools.panels.themeName === "dark" ? "monokai" : "xcode"
+        }
         value={dispatchObj}
         placeholder={note}
         height="100%"
