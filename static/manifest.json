@@ -2,6 +2,7 @@
   "name": "React Stores Devtools Extension",
   "version": "1.0.0",
   "description": "Better experience for debug your react stores with chrome devtools extension",
+  "short_name": "React Stores Inspector",
   "devtools_page": "main.html",
   "background": {
     "scripts": ["background.js"],
@@ -20,7 +21,7 @@
     "48": "img/48x48.png",
     "128": "img/128x128.png"
   },
-  "permissions": ["activeTab", "tabs", "http://*/*", "https://*/*"],
+  "permissions": ["http://*/*", "https://*/*"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; style-src * 'unsafe-inline'; img-src 'self' data:;"
 }

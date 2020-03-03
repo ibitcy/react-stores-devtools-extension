@@ -17,7 +17,7 @@ Debug your react stores with chrome devtools extension.
 
 ## How to install
 
-- from [Chrome Web Store](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd);
+- from [Chrome Web Store](https://chrome.google.com/webstore/detail/react-stores-devtools-extension/jofikieipejiceaccabdhlbedbfhogkm);
 - or build it with `yarn && yarn run build` and [load the extension's folder](https://developer.chrome.com/extensions/getstarted#unpacked) `./extension`;
 
 ## Demo
