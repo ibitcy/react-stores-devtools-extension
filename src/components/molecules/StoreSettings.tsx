@@ -14,5 +14,5 @@ export const StoreSettings: React.FC<{}> = () => {
 };
 
 const root = css`
-  padding: 8px 8px 8px 4px;
+  padding: 8px 8px 8px 0px;
 `;

@@ -70,5 +70,6 @@ function isIterrable(value: any) {
 }
 
 const message = css`
+  padding: 4px;
   color: var(--text-fade-color);
 `;

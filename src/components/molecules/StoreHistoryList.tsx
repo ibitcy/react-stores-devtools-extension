@@ -1,7 +1,6 @@
 /* @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import * as React from "react";
-import { useGlobalState } from "hooks/useGlobalState";
 import { useStoreInstance } from "hooks/useStoreInstance";
 import { mergeClassNames } from "utils";
 import { Cross } from "components/atoms/Cross";
@@ -33,29 +32,47 @@ export const StoreHistoryList: React.FC<IProps> = ({
 
   const filteredItems = React.useMemo(
     () =>
-      !storeUI.state.filter
-        ? items.sort((a, b) =>
-            storeUI.state.sort
-              ? a.timestamp - b.timestamp
-              : b.timestamp - a.timestamp
-          )
-        : items
-            .filter(
-              item =>
-                item.action
-                  .toLowerCase()
-                  .indexOf(storeUI.state.filter.toLowerCase()) >= 0
+      items
+        .map((item, index, arr) => {
+          const time = new Date(
+            index === 0
+              ? item.timestamp
+              : item.timestamp - arr[index - 1].timestamp
+          );
+          return {
+            ...item,
+            timeValue: (
+              <span>
+                {index !== 0 && "+"}
+                {index !== 0
+                  ? times(time.getUTCHours(), 2)
+                  : times(time.getHours(), 2)}
+                :{times(time.getMinutes(), 2)}:{times(time.getSeconds(), 2)}
+                <span css={milliseconds}>
+                  {times(time.getMilliseconds(), 3)}
+                </span>
+              </span>
             )
-            .sort((a, b) => {
-              return (
-                a.action
-                  .toLowerCase()
-                  .indexOf(storeUI.state.filter.toLowerCase()) -
-                b.action
-                  .toLowerCase()
-                  .indexOf(storeUI.state.filter.toLowerCase())
-              );
-            }),
+          };
+        })
+        .sort((a, b) =>
+          storeUI.state.sort
+            ? a.timestamp - b.timestamp
+            : b.timestamp - a.timestamp
+        )
+        .filter(
+          item =>
+            !storeUI.state.filter ||
+            item.action
+              .toLowerCase()
+              .indexOf(storeUI.state.filter.toLowerCase()) >= 0
+        )
+        .sort((a, b) => {
+          return (
+            a.action.toLowerCase().indexOf(storeUI.state.filter.toLowerCase()) -
+            b.action.toLowerCase().indexOf(storeUI.state.filter.toLowerCase())
+          );
+        }),
     [items, storeUI.state.filter, storeUI.state.sort]
   );
   return (
@@ -74,7 +91,8 @@ export const StoreHistoryList: React.FC<IProps> = ({
         </Button>
         <div
           style={{
-            display: "flex"
+            display: "flex",
+            alignItems: "center"
           }}
         >
           <Input
@@ -94,15 +112,11 @@ export const StoreHistoryList: React.FC<IProps> = ({
           </button>
         </div>
       </div>
-      <div css={root}>
+      <div css={[root]}>
         {filteredItems.map((historyItem, index, array) => {
-          const time = new Date(
-            index === 0
-              ? historyItem.timestamp
-              : historyItem.timestamp - array[index - 1].timestamp
-          );
           return (
             <div
+              key={index}
               onClick={() => {
                 onChangeActive(index);
               }}
@@ -110,15 +124,11 @@ export const StoreHistoryList: React.FC<IProps> = ({
               css={historyItemCn}
             >
               <span css={nameCn}>{historyItem.action}</span>
-              <span css={timeCn}>
-                {index !== 0 && "+"}
-                {index !== 0
-                  ? times(time.getUTCHours(), 2)
-                  : times(time.getHours(), 2)}
-                :{times(time.getMinutes(), 2)}:{times(time.getSeconds(), 2)}
-                <span css={milliseconds}>
-                  {times(time.getMilliseconds(), 3)}
-                </span>
+              <span
+                css={timeCn}
+                title={new Date(historyItem.timestamp).toLocaleTimeString()}
+              >
+                {historyItem.timeValue}
               </span>
             </div>
           );

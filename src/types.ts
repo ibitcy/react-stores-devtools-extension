@@ -8,6 +8,11 @@ export interface ITrace {
   sourceMap?: Omit<ITrace, "sourceMap">;
 }
 
+export type TStoreListItem = {
+  name: string;
+  active: boolean;
+};
+
 export type THistoryItem = {
   action: string;
   state: Record<any, any>;

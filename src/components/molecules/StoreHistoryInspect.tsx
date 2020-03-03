@@ -39,50 +39,58 @@ export const StoreHistoryInspect: React.FC<IProps> = ({ activeIndex }) => {
     activeStore
   ]);
 
-  React.useEffect(() => {
-    if (activeIndex === 0) {
-      storeUI.setState({
-        activeTab: ETabs.State
-      });
+  const availableTabs = React.useMemo(() => {
+    const tabs = [];
+    if (!historyItem) {
+      return tabs;
     }
-  }, [activeIndex]);
+    if (Boolean(Object.keys(historyItem.payload).length))
+      tabs.push(ETabs.Payload);
+    if (Boolean(Object.keys(historyItem.state).length)) tabs.push(ETabs.State);
+    if (activeIndex > 0) tabs.push(ETabs.Diff);
+    if (Boolean(historyItem.trace?.length)) tabs.push(ETabs.Trace);
+
+    return tabs;
+  }, [historyItem, activeIndex]);
+
+  const activeTab = availableTabs.includes(storeUI.state.activeTab)
+    ? storeUI.state.activeTab
+    : availableTabs[0];
+
+  if (!historyItem) {
+    return null;
+  }
 
   return (
     <div css={layout}>
       <div css={settingsBox}>
-        {Object.keys(ETabs).map(key => {
-          if (activeIndex === 0 && key !== ETabs.State && key !== ETabs.Trace) {
-            return null;
-          }
-          return (
-            <Button
-              key={key}
-              theme="tab"
-              className={mergeClassNames([
-                storeUI.state.activeTab === ETabs[key] && "active"
-              ])}
-              onClick={() => {
-                storeUI.setState({
-                  activeTab: ETabs[key]
-                });
-              }}
-            >
-              {ETabs[key]}
-            </Button>
-          );
-        })}
+        {availableTabs.map(tab => (
+          <Button
+            key={tab}
+            theme="tab"
+            className={mergeClassNames([activeTab === tab && "active"])}
+            onClick={() => {
+              storeUI.setState({
+                activeTab: tab
+              });
+            }}
+          >
+            {tab}
+          </Button>
+        ))}
       </div>
       <div css={root}>
-        {storeUI.state.activeTab === ETabs.Payload && (
+        {activeTab === ETabs.Payload && (
           <ObjectViewer noHightlight obj={historyItem.payload} />
         )}
-        {storeUI.state.activeTab === ETabs.State && (
+        {activeTab === ETabs.State && (
           <ObjectViewer noHightlight obj={historyItem.state} />
         )}
-        {storeUI.state.activeTab === ETabs.Diff && activeIndex > 0 && (
-          <StateDiff activeIndex={activeIndex} />
+
+        {activeTab === ETabs.Diff && activeIndex > 0 && (
+          <StateDiff key={activeStore} activeIndex={activeIndex} />
         )}
-        {storeUI.state.activeTab === ETabs.Trace && (
+        {activeTab === ETabs.Trace && (
           <TraceViewer traceList={historyItem.trace} />
         )}
       </div>

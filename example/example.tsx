@@ -2,6 +2,10 @@ import "reflect-metadata";
 import { Store } from "react-stores";
 import { Expose, plainToClass } from "class-transformer";
 import { Store as Store4 } from "./oldstores_4.0.2.js";
+import * as ReactDOM from "react-dom";
+import * as React from "react";
+import { App } from "./App";
+
 class User {
   @Expose() id: number;
   @Expose() firstName: string;
@@ -181,7 +185,7 @@ setTimeout(() => {
       },
       $actionName: "@this_is_update"
     });
-  }, 3000);
+  }, 10000);
 }, 1000);
 
 setTimeout(() => {
@@ -240,3 +244,5 @@ setTimeout(() => {
 }, 5000);
 
 window["store"] = Store;
+
+ReactDOM.render(<App />, document.getElementById("app"));

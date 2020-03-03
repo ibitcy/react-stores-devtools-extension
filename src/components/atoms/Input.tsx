@@ -2,10 +2,11 @@
 import * as React from "react";
 import { css, jsx } from "@emotion/core";
 
-export const Input: React.FC<React.HTMLAttributes<
-  HTMLInputElement
->> = props => {
-  return <input value={props.defaultValue} css={input} {...props} />;
+export const Input: React.FC<React.HTMLAttributes<HTMLInputElement>> = ({
+  defaultValue,
+  ...props
+}) => {
+  return <input value={defaultValue} css={input} {...props} />;
 };
 
 const input = css`

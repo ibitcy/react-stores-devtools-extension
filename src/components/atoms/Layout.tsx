@@ -24,8 +24,10 @@ export const Layout: React.FC<IProps> = ({ name, children }) => {
 
   React.useEffect(() => {
     const handleMove = function(event) {
-      thirdRef.current.style.width =
-        document.body.clientWidth - event.pageX + "px";
+      if (thirdRef.current) {
+        thirdRef.current.style.width =
+          document.body.clientWidth - event.pageX + "px";
+      }
     };
 
     const handleMouseUp = function(event) {

@@ -18,12 +18,13 @@ export const StoreHistory: React.FC<{}> = () => {
       <div css={layout}>
         <div css={box}>
           <StoreHistoryList
+            key={activeStore}
             activeIndex={inspectedIndex}
             onChangeActive={setInspected}
           />
         </div>
         <div css={box}>
-          <StoreHistoryInspect activeIndex={inspectedIndex} />
+          <StoreHistoryInspect key={activeStore} activeIndex={inspectedIndex} />
         </div>
       </div>
     </React.Fragment>

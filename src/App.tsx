@@ -15,7 +15,6 @@ interface IProps {}
 export const App: React.FC<IProps> = () => {
   const instance = useInstance();
   const { activeStore } = useGlobalState();
-
   const { list } = useStore(instance.storesList);
 
   return (
@@ -37,7 +36,7 @@ export const App: React.FC<IProps> = () => {
         />
       ) : (
         <Layout name={instance.port.name}>
-          <StoreList storesKeys={list} />
+          <StoreList storesList={list} />
           {activeStore && instance?.stores?.has(activeStore) && (
             <StoreInspect />
           )}

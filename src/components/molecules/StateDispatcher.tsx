@@ -11,6 +11,7 @@ import "ace-builds/src-noconflict/keybinding-vscode";
 import { Button } from "components/atoms/Button";
 import { encodeData } from "utils/encoder";
 import { EAction } from "types";
+import { useInstance } from "hooks/useInstance";
 
 const note = `// You mast return an object from dispatcher
 // Please note for supported types for dispatching
@@ -33,6 +34,7 @@ interface IProps {
 
 export const StateDispatcher: React.FC<IProps> = ({ onDispatch }) => {
   const { activeStore } = useGlobalState();
+  const instance = useInstance();
 
   const [dispatchObj, setDispathObj] = React.useState();
 
@@ -65,6 +67,15 @@ export const StateDispatcher: React.FC<IProps> = ({ onDispatch }) => {
   );
 
   function dispatch() {
+    if (
+      !instance.storesList.state.list.find(
+        storeItem => storeItem.name === activeStore
+      ).active
+    ) {
+      return chrome.devtools.inspectedWindow.eval(
+        `console.error("ReactStoreInspector: Can't dispatch to disabled store. Store not exists on page.")`
+      );
+    }
     try {
       const object = new Function(`return (function() {${dispatchObj}})()`)();
       const state = encodeData({

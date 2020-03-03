@@ -1,5 +1,5 @@
 import { Store, StoreOptions } from "react-stores";
-import { TOutDispatch, EAction, THistoryItem } from "types";
+import { TOutDispatch, EAction, THistoryItem, TStoreListItem } from "types";
 import { decodeData } from "utils/encoder";
 
 export type TStoreInstance = {
@@ -8,6 +8,7 @@ export type TStoreInstance = {
   meta: Store<{
     updateTimes: number;
     version: string;
+    active: boolean;
   }>;
   history: Store<{
     items: THistoryItem[];
@@ -17,7 +18,7 @@ export type TStoreInstance = {
 interface IPageInstance {
   port: chrome.runtime.Port;
   stores: Map<string, TStoreInstance>;
-  storesList: Store<{ list: string[] }>;
+  storesList: Store<{ list: TStoreListItem[] }>;
 }
 
 export type TInstances = Map<number, IPageInstance>;
@@ -26,7 +27,6 @@ const instances: Map<number, IPageInstance> = new Map();
 
 chrome.runtime.onConnect.addListener(function(port) {
   const tabId = port.sender.tab.id;
-  console.log("add listener");
   instances.set(tabId, {
     port,
     stores: new Map(),
@@ -50,14 +50,46 @@ const messageHandler = function(
   switch (message.action) {
     case EAction.CREATE_NEW_STORE: {
       const store = new Store(decodeData(message.payload.initialState));
+      if (pageInstance.stores.has(message.payload.name)) {
+        const storeInstance = pageInstance.stores.get(message.payload.name);
+        storeInstance.meta.setState({
+          active: true,
+          updateTimes: storeInstance.meta.state.updateTimes + 1
+        });
+        storeInstance.history.setState({
+          items: [
+            ...storeInstance.history.state.items,
+            {
+              action: message.payload.options.persistence
+                ? "@initStore/persistence"
+                : "@initStore",
+              state: { ...store.state },
+              payload: {},
+              timestamp: Date.now(),
+              trace: message.payload.trace
+            }
+          ]
+        });
 
+        pageInstance.storesList.setState({
+          list: pageInstance.storesList.state.list.map(storeItem => ({
+            ...storeItem,
+            active:
+              storeItem.name === message.payload.name ? true : storeItem.active
+          }))
+        });
+
+        return;
+      }
       pageInstance.stores.set(message.payload.name, {
-        store: new Store(decodeData(message.payload.initialState)),
+        store: store,
         options: message.payload.options,
         history: new Store({
           items: [
             {
-              action: "@init",
+              action: message.payload.options.persistence
+                ? "@initStore/persistence"
+                : "@initStore",
               state: { ...store.state },
               timestamp: Date.now(),
               payload: {},
@@ -67,20 +99,44 @@ const messageHandler = function(
         }),
         meta: new Store({
           updateTimes: 0,
-          version: message.payload.meta.version
+          version: message.payload.meta.version,
+          active: Boolean(true)
         })
       });
       pageInstance.storesList.setState({
-        list: [...pageInstance.storesList.state.list, message.payload.name]
+        list: [
+          ...pageInstance.storesList.state.list,
+          { name: message.payload.name, active: true }
+        ]
       });
+
       break;
     }
 
     case EAction.REMOVE_STORE: {
-      pageInstance.storesList.setState({
-        list: [...pageInstance.storesList.state.list, message.payload.name]
+      const storeInstance = pageInstance.stores.get(message.payload.name);
+      storeInstance.meta.setState({
+        active: false
       });
-      pageInstance.stores.delete(message.payload.name);
+      storeInstance.history.setState({
+        items: [
+          ...storeInstance.history.state.items,
+          {
+            action: `@removeStore`,
+            state: {},
+            payload: {},
+            timestamp: Date.now(),
+            trace: message.payload.trace
+          }
+        ]
+      });
+      pageInstance.storesList.setState({
+        list: pageInstance.storesList.state.list.map(storeItem => ({
+          ...storeItem,
+          active:
+            storeItem.name === message.payload.name ? false : storeItem.active
+        }))
+      });
       break;
     }
 
@@ -96,7 +152,9 @@ const messageHandler = function(
         items: [
           ...storeInstance.history.state.items,
           {
-            action: message.payload.actionName ?? `@update_${Date.now()}`,
+            action:
+              message.payload.actionName ??
+              `@update/${new Date(Date.now()).toLocaleTimeString()}`,
             state: { ...(storeInstance.store.state as any) },
             payload: nextState,
             timestamp: Date.now(),

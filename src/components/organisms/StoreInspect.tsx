@@ -16,6 +16,7 @@ enum ETabs {
 }
 
 export const StoreInspect: React.FC<{}> = () => {
+  const { activeStore } = useGlobalState();
   const store = useIsolatedStore(
     {
       activeTab: ETabs.State
@@ -48,7 +49,9 @@ export const StoreInspect: React.FC<{}> = () => {
       </div>
       <div css={root}>
         <div>
-          {store.state.activeTab === ETabs.State && <StoreState />}
+          {store.state.activeTab === ETabs.State && (
+            <StoreState key={activeStore} />
+          )}
           {store.state.activeTab === ETabs.Settings && <StoreSettings />}
           {store.state.activeTab === ETabs.DispatchState && (
             <StateDispatcher

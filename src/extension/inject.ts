@@ -19,11 +19,20 @@ class Inspector {
   ) {
     this.stores.set(name, store);
     this.getStackTrace().then(trace => {
+      let currentState = store.getInitialState();
+      if (options.persistence) {
+        const persistentState = store.persistenceDriver.read().data;
+
+        if (persistentState) {
+          currentState = persistentState;
+        }
+      }
+
       this.sendDataToDevTools({
         action: EAction.CREATE_NEW_STORE,
         payload: {
           name: name,
-          initialState: encodeData(store.getInitialState()),
+          initialState: encodeData(currentState),
           options: options,
           trace,
           meta: {

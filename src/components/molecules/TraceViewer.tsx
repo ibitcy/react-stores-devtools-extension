@@ -74,7 +74,7 @@ const traceItemCn = css`
   align-items: center;
   justify-content: space-between;
   color: var(--text-fade-color);
-  padding: 6px 8px;
+  padding: 6px 8px 6px 12px;
   white-space: nowrap;
   width: 100%;
   margin-bottom: 2px;

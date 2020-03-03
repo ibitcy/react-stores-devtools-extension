@@ -4,7 +4,7 @@ const webpackMerge = require("webpack-merge");
 
 module.exports = webpackMerge.smart(webpackBase, {
   entry: {
-    example: "./example/example.ts"
+    example: "./example/example.tsx"
   },
   output: {
     path: path.resolve("./example")

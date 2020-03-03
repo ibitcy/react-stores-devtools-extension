@@ -7,46 +7,46 @@ import { mergeClassNames } from "utils";
 import { Input } from "components/atoms/Input";
 import { Atom } from "components/atoms/Atom";
 import { Cross } from "components/atoms/Cross";
+import { TStoreListItem } from "types";
 
 interface IProps {
-  storesKeys: string[];
+  storesList: TStoreListItem[];
 }
 
-export const StoreList: React.FC<IProps> = ({ storesKeys }) => {
+export const StoreList: React.FC<IProps> = ({ storesList }) => {
   const { activeStore, setActiveStore } = useGlobalState();
   const [filter, setFilter] = React.useState("");
-
   useEffectOnce(() => {
-    if (storesKeys.length < 0) {
+    if (storesList.length < 0) {
       return false;
     }
-    setActiveStore(storesKeys[0]);
+    setActiveStore(storesList[0].name);
     return true;
-  }, [storesKeys]);
+  }, [storesList]);
 
   const filteredItems = React.useMemo(
     () =>
       !filter
-        ? storesKeys.sort((a, b) => {
-            if (a < b) {
+        ? storesList.sort((a, b) => {
+            if (a.name < b.name) {
               return -1;
             }
-            if (a > b) {
+            if (a.name > b.name) {
               return 1;
             }
             return 0;
           })
-        : storesKeys
+        : storesList
             .filter(
-              item => item.toLowerCase().indexOf(filter.toLowerCase()) >= 0
+              item => item.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0
             )
             .sort((a, b) => {
               return (
-                a.toLowerCase().indexOf(filter.toLowerCase()) -
-                b.toLowerCase().indexOf(filter.toLowerCase())
+                a.name.toLowerCase().indexOf(filter.toLowerCase()) -
+                b.name.toLowerCase().indexOf(filter.toLowerCase())
               );
             }),
-    [storesKeys, filter]
+    [storesList, filter]
   );
 
   return (
@@ -80,17 +80,21 @@ export const StoreList: React.FC<IProps> = ({ storesKeys }) => {
       </div>
       <div css={root}>
         {!filteredItems.length && <div css={message}>Stores not found</div>}
-        {filteredItems.map(key => {
+        {filteredItems.map(storeItem => {
           return (
             <div
-              key={key}
-              className={mergeClassNames([activeStore === key && "active"])}
-              css={[storeItem]}
+              key={storeItem.name}
+              className={mergeClassNames([
+                activeStore === storeItem.name && "active"
+              ])}
+              title={storeItem.active ? "Store is active" : "Store disabled"}
+              css={[storeItemCn]}
               onMouseDown={() => {
-                setActiveStore(key);
+                setActiveStore(storeItem.name);
               }}
             >
-              {key}
+              {storeItem.name}
+              {!storeItem.active && <span css={disabledCircle} />}
             </div>
           );
         })}
@@ -187,11 +191,14 @@ const root = css`
   flex: 1 1 calc(100% - 30px);
 `;
 
-const storeItem = css`
+const storeItemCn = css`
   padding: 4px 8px;
   margin-bottom: 1px;
   color: var(--text-base-color);
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   &:hover {
     background-color: var(--hover-faded-color);
@@ -200,4 +207,12 @@ const storeItem = css`
   &.active {
     background-color: var(--hover-color);
   }
+`;
+
+const disabledCircle = css`
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--code-red);
 `;

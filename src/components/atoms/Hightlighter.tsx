@@ -32,7 +32,9 @@ export const Hightlighter: React.FC<IProps> = props => {
           (ANIMATION_TIME / Math.PI)
       )
     );
-    hightlightRef.current.style.opacity = String(VALUE * y);
+    if (hightlightRef.current) {
+      hightlightRef.current.style.opacity = String(VALUE * y);
+    }
 
     if (currentProgressRef.current < ANIMATION_TIME - prevProgressRef.current) {
       animationRef.current = window.requestAnimationFrame(step);
@@ -43,7 +45,9 @@ export const Hightlighter: React.FC<IProps> = props => {
     currentProgressRef.current = ANIMATION_TIME;
     prevProgressRef.current = 0;
     startRef.current = null;
-    hightlightRef.current.style.opacity = String(0);
+    if (hightlightRef.current) {
+      hightlightRef.current.style.opacity = String(0);
+    }
   }, []);
 
   const fire = React.useCallback(function() {

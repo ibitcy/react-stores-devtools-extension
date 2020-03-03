@@ -27,6 +27,23 @@ chrome.runtime.getBackgroundPage((bg: TInstanse) => {
         </GlobalProvider>,
         document.getElementById("app")
       );
+      window.onbeforeunload = function(event) {
+        ReactDOM.render(
+          <Loader
+            message="Page is not connect"
+            postfix={
+              <Button
+                onClick={() => {
+                  chrome.devtools.inspectedWindow.reload({});
+                }}
+              >
+                Reload page
+              </Button>
+            }
+          />,
+          document.getElementById("app")
+        );
+      };
     } else {
       ReactDOM.render(
         <Loader
