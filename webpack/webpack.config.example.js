@@ -8,5 +8,6 @@ module.exports = webpackMerge.smart(webpackBase, {
   },
   output: {
     path: path.resolve("./example")
-  }
+  },
+  mode: "development"
 });

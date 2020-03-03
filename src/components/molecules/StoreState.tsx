@@ -4,6 +4,7 @@ import * as React from "react";
 import { useStoreInstance } from "hooks/useStoreInstance";
 import { ObjectViewer } from "components/atoms/ObjectViewer";
 import { useStore } from "react-stores";
+import { HeadDivider } from "components/atoms/HeadDivider";
 
 export const StoreState: React.FC<{}> = () => {
   const storeInstance = useStoreInstance();
@@ -16,7 +17,11 @@ export const StoreState: React.FC<{}> = () => {
         <ObjectViewer obj={store} />
       </div>
       <div css={metafooter}>
-        <div css={item}>Update times: {meta.updateTimes}</div>
+        <div css={item}>
+          <div css={item}>Update times: {meta.updateTimes}</div>
+          <HeadDivider />
+          <div css={item}>Listeners: {meta.listnersNumber}</div>
+        </div>
         <div css={item}>Version: {meta.version}</div>
       </div>
     </div>
@@ -49,6 +54,11 @@ const metafooter = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  white-space: nowrap;
 `;
 
-const item = css``;
+const item = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+`;

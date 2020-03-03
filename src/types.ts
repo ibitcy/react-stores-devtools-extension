@@ -21,11 +21,18 @@ export type THistoryItem = {
   trace: ITrace[];
 };
 
+export type TListener = {
+  id: number;
+  trace: ITrace[];
+};
+
 export enum EAction {
   SET_STATE,
   RESET_STATE,
   CREATE_NEW_STORE,
-  REMOVE_STORE
+  REMOVE_STORE,
+  ADD_EVENT_LISTNER,
+  REMOVE_EVENT_LISTNER
 }
 
 export type TIncomeDispatch =
@@ -54,6 +61,7 @@ export type TOutDispatch =
         trace: ITrace[];
         meta: {
           version: string;
+          persistenceDriverName: string;
         };
       };
     }
@@ -71,5 +79,20 @@ export type TOutDispatch =
       payload: {
         trace: ITrace[];
         name: string;
+      };
+    }
+  | {
+      action: EAction.ADD_EVENT_LISTNER;
+      payload: {
+        trace: ITrace[];
+        name: string;
+        eventId: number;
+      };
+    }
+  | {
+      action: EAction.REMOVE_EVENT_LISTNER;
+      payload: {
+        name: string;
+        eventId: number;
       };
     };

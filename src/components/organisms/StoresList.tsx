@@ -8,6 +8,7 @@ import { Input } from "components/atoms/Input";
 import { Atom } from "components/atoms/Atom";
 import { Cross } from "components/atoms/Cross";
 import { TStoreListItem } from "types";
+import { HeadDivider } from "components/atoms/HeadDivider";
 
 interface IProps {
   storesList: TStoreListItem[];
@@ -63,7 +64,7 @@ export const StoreList: React.FC<IProps> = ({ storesList }) => {
         >
           <Atom />
         </span>
-        <div css={delimitter} />
+        <HeadDivider />
         <Input
           css={input}
           onChange={event => setFilter((event.target as any).value)}
@@ -105,7 +106,6 @@ export const StoreList: React.FC<IProps> = ({ storesList }) => {
 
 const atom = css`
   width: 20px;
-  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,24 +120,17 @@ const box = css`
   height: 100%;
 `;
 
-const delimitter = css`
-  border-right: var(--border);
-  height: 100%;
-  opacity: 0.4;
-  margin: 5px 8px;
-`;
-
 const settingsBox = css`
   display: flex;
   padding: 4px 8px;
   height: 30px;
   border-bottom: var(--border);
   background: var(--bg-base-color);
-  align-items: center;
   color: var(--text-base-color);
   flex-grow: 0;
   flex-shrink: 0;
   width: 100%;
+  align-items: stretch;
   border-color: var(--border-faded-color);
 `;
 

@@ -18,6 +18,7 @@ class Inspector {
     addEvent: boolean = true
   ) {
     this.stores.set(name, store);
+
     this.getStackTrace().then(trace => {
       let currentState = store.getInitialState();
       if (options.persistence) {
@@ -36,6 +37,9 @@ class Inspector {
           options: options,
           trace,
           meta: {
+            persistenceDriverName:
+              (store.persistenceDriver as any).__constructorName ??
+              Object.getPrototypeOf(store.persistenceDriver)?.constructor?.name,
             version: store.version ?? "?.?.?"
           }
         }
@@ -81,6 +85,29 @@ class Inspector {
       });
       this.storesEvents.get(name)?.remove();
       this.storesEvents.delete(name);
+    });
+  }
+
+  public addEvent(name: string, eventId: number) {
+    this.getStackTrace().then(trace => {
+      this.sendDataToDevTools({
+        action: EAction.ADD_EVENT_LISTNER,
+        payload: {
+          trace,
+          name,
+          eventId
+        }
+      });
+    });
+  }
+
+  public removeEvent(name: string, eventId: number) {
+    this.sendDataToDevTools({
+      action: EAction.REMOVE_EVENT_LISTNER,
+      payload: {
+        name,
+        eventId
+      }
     });
   }
 
@@ -141,8 +168,7 @@ class Inspector {
               "Inspector.removeStore",
               "t.setState",
               "t.resetStore"
-            ].indexOf(frame.functionName) === -1 &&
-            frame.fileName?.indexOf("react-stores") === -1
+            ].indexOf(frame.functionName) === -1 && frame.fileName
         )
         .map(frame => {
           return {

@@ -11,40 +11,41 @@ export type TInstanse = Window & {
   instances: TInstances;
 };
 
-let interval = null;
+let firstRender = false;
 
 chrome.runtime.getBackgroundPage((bg: TInstanse) => {
   (window as any).bg = bg;
 
   function checkConnected() {
     const connected = bg.instances.has(chrome.devtools.inspectedWindow.tabId);
-
     if (connected) {
-      clearTimeout(interval);
-      ReactDOM.render(
-        <GlobalProvider>
-          <App />
-        </GlobalProvider>,
-        document.getElementById("app")
-      );
-      window.onbeforeunload = function(event) {
+      if (!firstRender) {
         ReactDOM.render(
-          <Loader
-            message="Page is not connect"
-            postfix={
-              <Button
-                onClick={() => {
-                  chrome.devtools.inspectedWindow.reload({});
-                }}
-              >
-                Reload page
-              </Button>
-            }
-          />,
+          <GlobalProvider>
+            <App />
+          </GlobalProvider>,
           document.getElementById("app")
         );
-      };
+        window.onbeforeunload = function(event) {
+          ReactDOM.render(
+            <Loader
+              message="Page is not connect"
+              postfix={
+                <Button
+                  onClick={() => {
+                    chrome.devtools.inspectedWindow.reload({});
+                  }}
+                >
+                  Reload page
+                </Button>
+              }
+            />,
+            document.getElementById("app")
+          );
+        };
+      }
     } else {
+      firstRender = false;
       ReactDOM.render(
         <Loader
           message="Page is not connect"
@@ -60,7 +61,7 @@ chrome.runtime.getBackgroundPage((bg: TInstanse) => {
         />,
         document.getElementById("app")
       );
-      interval = setTimeout(checkConnected, 1000);
+      setTimeout(checkConnected, 1000);
     }
   }
 

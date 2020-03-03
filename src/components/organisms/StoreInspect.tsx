@@ -8,9 +8,11 @@ import { Button } from "components/atoms/Button";
 import { useIsolatedStore } from "react-stores";
 import { mergeClassNames } from "utils";
 import { StateDispatcher } from "components/molecules/StateDispatcher";
+import { StoreListeners } from "components/molecules/StoreListeners";
 
 enum ETabs {
   State = "State",
+  Listeners = "Event Listeners",
   Settings = "Settings",
   DispatchState = "Dispatch state"
 }
@@ -51,6 +53,9 @@ export const StoreInspect: React.FC<{}> = () => {
         <div>
           {store.state.activeTab === ETabs.State && (
             <StoreState key={activeStore} />
+          )}
+          {store.state.activeTab === ETabs.Listeners && (
+            <StoreListeners key={activeStore} />
           )}
           {store.state.activeTab === ETabs.Settings && <StoreSettings />}
           {store.state.activeTab === ETabs.DispatchState && (

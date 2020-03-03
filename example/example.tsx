@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Store } from "react-stores";
+import { Store, StoreEventType } from "react-stores";
 import { Expose, plainToClass } from "class-transformer";
 import { Store as Store4 } from "./oldstores_4.0.2.js";
 import * as ReactDOM from "react-dom";
@@ -185,6 +185,7 @@ setTimeout(() => {
       },
       $actionName: "@this_is_update"
     });
+    store2.on(StoreEventType.Update, () => {});
   }, 10000);
 }, 1000);
 

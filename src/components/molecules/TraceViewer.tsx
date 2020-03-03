@@ -6,6 +6,7 @@ import { Button } from "components/atoms/Button";
 
 interface IProps {
   traceList: ITrace[];
+  toggleAsLink?: boolean;
 }
 
 enum EMode {
@@ -13,7 +14,7 @@ enum EMode {
   SourceMap
 }
 
-export const TraceViewer: React.FC<IProps> = ({ traceList }) => {
+export const TraceViewer: React.FC<IProps> = ({ traceList, toggleAsLink }) => {
   const hasSourceMaps = React.useMemo(
     () => traceList.some(item => item.sourceMap),
     [traceList]
@@ -48,7 +49,7 @@ export const TraceViewer: React.FC<IProps> = ({ traceList }) => {
       })}
       {hasSourceMaps && (
         <Button
-          css={button}
+          css={[button, toggleAsLink && buttonLink]}
           onClick={() => {
             setMode(mode === EMode.Native ? EMode.SourceMap : EMode.Native);
           }}
@@ -116,4 +117,19 @@ const button = css`
   width: 25px;
   height: 25px;
   border-radius: 50%;
+`;
+
+const buttonLink = css`
+  top: -22px;
+  border: none;
+  padding: 0;
+  right: 4px;
+
+  &:hover:not([disabled]):not(.active) {
+    background: transparent;
+
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: var(--text-primary-color);
+  }
 `;

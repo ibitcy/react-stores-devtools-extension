@@ -31,7 +31,7 @@
     "dev": "webpack --watch --config ./webpack/webpack.config.app.js --mode development --progress",
     "clean": "rimraf ./extension",
     "build:app": "webpack --mode production --config ./webpack/webpack.config.app.js",
-    "build:example": "webpack --mode production --config ./webpack/webpack.config.example.js",
+    "build:example": "NODE_ENV='development' webpack  --config ./webpack/webpack.config.example.js",
     "build:inject": "webpack --mode production --config ./webpack/webpack.config.inject.js",
     "build:extension": "webpack --mode production --config ./webpack/webpack.config.extension.js",
     "build": "yarn clean && mkdir extension && yarn run build:example && yarn run build:inject && yarn run build:extension && yarn run build:app"

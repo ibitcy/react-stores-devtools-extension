@@ -1,17 +1,29 @@
-import { Store, StoreOptions } from "react-stores";
-import { TOutDispatch, EAction, THistoryItem, TStoreListItem } from "types";
+import { Store, StoreOptions, StoreEventType } from "react-stores";
+import {
+  TOutDispatch,
+  EAction,
+  THistoryItem,
+  TStoreListItem,
+  TListener
+} from "types";
 import { decodeData } from "utils/encoder";
 
 export type TStoreInstance = {
   store: Store<unknown>;
-  options: StoreOptions;
+  options: StoreOptions & {
+    persistenceDriver: string;
+  };
   meta: Store<{
     updateTimes: number;
     version: string;
     active: boolean;
+    listnersNumber: number;
   }>;
   history: Store<{
     items: THistoryItem[];
+  }>;
+  listeners: Store<{
+    list: TListener[];
   }>;
 };
 
@@ -83,7 +95,10 @@ const messageHandler = function(
       }
       pageInstance.stores.set(message.payload.name, {
         store: store,
-        options: message.payload.options,
+        options: {
+          ...message.payload.options,
+          persistenceDriver: message.payload.meta.persistenceDriverName
+        },
         history: new Store({
           items: [
             {
@@ -97,10 +112,14 @@ const messageHandler = function(
             }
           ]
         }),
+        listeners: new Store({
+          list: []
+        }),
         meta: new Store({
           updateTimes: 0,
           version: message.payload.meta.version,
-          active: Boolean(true)
+          active: Boolean(true),
+          listnersNumber: 0
         })
       });
       pageInstance.storesList.setState({
@@ -161,6 +180,41 @@ const messageHandler = function(
             trace: message.payload.trace
           }
         ]
+      });
+
+      break;
+    }
+
+    case EAction.ADD_EVENT_LISTNER: {
+      const storeInstance = pageInstance.stores.get(message.payload.name);
+      storeInstance.listeners.setState({
+        list: [
+          ...storeInstance.listeners.state.list,
+          {
+            id: message.payload.eventId,
+            trace: message.payload.trace
+          }
+        ]
+      });
+
+      storeInstance.meta.setState({
+        listnersNumber: storeInstance.listeners.state.list.length
+      });
+
+      break;
+    }
+
+    case EAction.REMOVE_EVENT_LISTNER: {
+      const storeInstance = pageInstance.stores.get(message.payload.name);
+      storeInstance.listeners.setState({
+        list: [
+          ...storeInstance.listeners.state.list.filter(
+            listener => listener.id !== message.payload.eventId
+          )
+        ]
+      });
+      storeInstance.meta.setState({
+        listnersNumber: storeInstance.listeners.state.list.length
       });
 
       break;
