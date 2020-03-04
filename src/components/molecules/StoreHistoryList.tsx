@@ -41,6 +41,7 @@ export const StoreHistoryList: React.FC<IProps> = ({
           );
           return {
             ...item,
+            id: index,
             timeValue: (
               <span>
                 {index !== 0 && "+"}
@@ -117,9 +118,11 @@ export const StoreHistoryList: React.FC<IProps> = ({
             <div
               key={index}
               onClick={() => {
-                onChangeActive(index);
+                onChangeActive(historyItem.id);
               }}
-              className={mergeClassNames([index === activeIndex && "active"])}
+              className={mergeClassNames([
+                historyItem.id === activeIndex && "active"
+              ])}
               css={historyItemCn}
             >
               <span css={nameCn}>{historyItem.action}</span>
