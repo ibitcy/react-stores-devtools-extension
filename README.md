@@ -28,7 +28,12 @@ See how the extension works on [Online demo](https://ibitcy.github.io/react-stor
 
 ## Usage
 
-You don't have to do anything if you use react-stores@5.\* or higher
+You don't have to do anything if you use react-stores@5.\* or higher. Stores attach to devtool by themselves.
+
+### Advices
+
+- Use `name` in store `options`, otherwise you will see a hashes of the store in the devtool panel
+- Use `$actionName` when you call setState to better explore store history
 
 ### For old versions
 
