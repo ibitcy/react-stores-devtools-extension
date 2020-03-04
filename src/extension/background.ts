@@ -27,15 +27,25 @@ const messageHandler = function(
   const pageInstance = instances.get(port.sender.tab.id);
 
   switch (message.action) {
+    case EAction.RELOAD: {
+      instances.set(port.sender.tab.id, {
+        ...pageInstance,
+        stores: new Map()
+      });
+      pageInstance.storesList.setState({
+        list: []
+      });
+      break;
+    }
     case EAction.CREATE_NEW_STORE: {
       const store = new Store(decodeData(message.payload.initialState));
       if (pageInstance.stores.has(message.payload.name)) {
         const storeInstance = pageInstance.stores.get(message.payload.name);
-        storeInstance.meta.setState({
+        storeInstance?.meta.setState({
           active: true,
           updateTimes: storeInstance.meta.state.updateTimes + 1
         });
-        storeInstance.history.setState({
+        storeInstance?.history.setState({
           items: [
             ...storeInstance.history.state.items,
             {
@@ -50,7 +60,7 @@ const messageHandler = function(
           ]
         });
 
-        pageInstance.storesList.setState({
+        pageInstance?.storesList.setState({
           list: pageInstance.storesList.state.list.map(storeItem => ({
             ...storeItem,
             active:
@@ -60,7 +70,7 @@ const messageHandler = function(
 
         return;
       }
-      pageInstance.stores.set(message.payload.name, {
+      pageInstance?.stores.set(message.payload.name, {
         store: store,
         options: {
           ...message.payload.options,
@@ -89,7 +99,7 @@ const messageHandler = function(
           listenersNumber: 0
         })
       });
-      pageInstance.storesList.setState({
+      pageInstance?.storesList.setState({
         list: [
           ...pageInstance.storesList.state.list,
           { name: message.payload.name, active: true }
@@ -101,10 +111,10 @@ const messageHandler = function(
 
     case EAction.REMOVE_STORE: {
       const storeInstance = pageInstance.stores.get(message.payload.name);
-      storeInstance.meta.setState({
+      storeInstance?.meta.setState({
         active: false
       });
-      storeInstance.history.setState({
+      storeInstance?.history.setState({
         items: [
           ...storeInstance.history.state.items,
           {
@@ -116,7 +126,7 @@ const messageHandler = function(
           }
         ]
       });
-      pageInstance.storesList.setState({
+      pageInstance?.storesList.setState({
         list: pageInstance.storesList.state.list.map(storeItem => ({
           ...storeItem,
           active:
@@ -130,11 +140,11 @@ const messageHandler = function(
       const nextState = decodeData(message.payload.nextState);
       const storeInstance = pageInstance.stores.get(message.payload.name);
 
-      storeInstance.store.setState(nextState);
-      storeInstance.meta.setState({
+      storeInstance?.store.setState(nextState);
+      storeInstance?.meta.setState({
         updateTimes: storeInstance.meta.state.updateTimes + 1
       });
-      storeInstance.history.setState({
+      storeInstance?.history.setState({
         items: [
           ...storeInstance.history.state.items,
           {
@@ -154,7 +164,7 @@ const messageHandler = function(
 
     case EAction.ADD_EVENT_LISTENER: {
       const storeInstance = pageInstance.stores.get(message.payload.name);
-      storeInstance.listeners.setState({
+      storeInstance?.listeners.setState({
         list: [
           ...storeInstance.listeners.state.list,
           {
@@ -164,7 +174,7 @@ const messageHandler = function(
         ]
       });
 
-      storeInstance.meta.setState({
+      storeInstance?.meta.setState({
         listenersNumber: storeInstance.listeners.state.list.length
       });
 
@@ -173,14 +183,14 @@ const messageHandler = function(
 
     case EAction.REMOVE_EVENT_LISTENER: {
       const storeInstance = pageInstance.stores.get(message.payload.name);
-      storeInstance.listeners.setState({
+      storeInstance?.listeners.setState({
         list: [
           ...storeInstance.listeners.state.list.filter(
             listener => listener.id !== message.payload.eventId
           )
         ]
       });
-      storeInstance.meta.setState({
+      storeInstance?.meta.setState({
         listenersNumber: storeInstance.listeners.state.list.length
       });
 

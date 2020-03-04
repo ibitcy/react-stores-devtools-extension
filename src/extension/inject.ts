@@ -111,6 +111,12 @@ class Inspector {
     });
   }
 
+  public reloadDevtools() {
+    this.sendDataToDevTools({
+      action: EAction.RELOAD
+    });
+  }
+
   private postMessageHandler = (event: MessageEvent) => {
     if (event.source !== window) {
       return;
@@ -193,3 +199,7 @@ class Inspector {
 }
 
 window["__REACT_STORES_INSPECTOR__"] = new Inspector();
+
+window.addEventListener("beforeunload", () => {
+  window["__REACT_STORES_INSPECTOR__"].reloadDevtools();
+});

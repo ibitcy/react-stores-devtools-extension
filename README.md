@@ -24,7 +24,7 @@ Debug your react stores with chrome devtools extension.
 
 ## Demo
 
-Test the extension on [Online demo](https://ibitcy.github.io/react-stores/)
+See how the extension works on [Online demo](https://ibitcy.github.io/react-stores/)
 
 ## Usage
 

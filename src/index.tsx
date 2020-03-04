@@ -5,59 +5,69 @@ import { GlobalProvider } from "GlobalProvider";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { TIncomeDispatch, TInstance } from "types";
+import { GlobalStyles } from "components/organisms/GlobalStyles";
 
-let firstRender = false;
-
+let appRendered = false;
+let waitRendered = false;
+const PageNotLoaded = () => {
+  return (
+    <React.Fragment>
+      <GlobalStyles />
+      <Loader
+        message="Page is not connect"
+        postfix={
+          <Button
+            onClick={() => {
+              chrome.devtools.inspectedWindow.reload({});
+            }}
+          >
+            Reload page
+          </Button>
+        }
+      />
+    </React.Fragment>
+  );
+};
 chrome.runtime.getBackgroundPage((bg: TInstance) => {
   (window as any).bg = bg;
 
   function checkConnected() {
     const connected = bg.instances.has(chrome.devtools.inspectedWindow.tabId);
     if (connected) {
-      if (!firstRender) {
+      if (!appRendered) {
         ReactDOM.render(
           <GlobalProvider>
             <App />
           </GlobalProvider>,
-          document.getElementById("app")
+          document.getElementById("app"),
+          () => {
+            waitRendered = false;
+            appRendered = true;
+          }
         );
         window.onbeforeunload = function(event) {
           ReactDOM.render(
-            <Loader
-              message="Page is not connect"
-              postfix={
-                <Button
-                  onClick={() => {
-                    chrome.devtools.inspectedWindow.reload({});
-                  }}
-                >
-                  Reload page
-                </Button>
-              }
-            />,
-            document.getElementById("app")
+            <PageNotLoaded />,
+            document.getElementById("app"),
+            () => {
+              waitRendered = true;
+            }
           );
         };
       }
     } else {
-      firstRender = false;
-      ReactDOM.render(
-        <Loader
-          message="Page is not connect"
-          postfix={
-            <Button
-              onClick={() => {
-                chrome.devtools.inspectedWindow.reload({});
-              }}
-            >
-              Reload page
-            </Button>
+      if (!waitRendered) {
+        ReactDOM.render(
+          <PageNotLoaded />,
+          document.getElementById("app"),
+          () => {
+            appRendered = false;
+            waitRendered = true;
           }
-        />,
-        document.getElementById("app")
-      );
-      setTimeout(checkConnected, 1000);
+        );
+      }
     }
+    setTimeout(checkConnected, 50);
   }
 
   checkConnected();

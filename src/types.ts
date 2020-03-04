@@ -63,7 +63,8 @@ export enum EAction {
   CREATE_NEW_STORE,
   REMOVE_STORE,
   ADD_EVENT_LISTENER,
-  REMOVE_EVENT_LISTENER
+  REMOVE_EVENT_LISTENER,
+  RELOAD
 }
 
 export type TIncomeDispatch =
@@ -126,4 +127,7 @@ export type TOutDispatch =
         name: string;
         eventId: number;
       };
+    }
+  | {
+      action: EAction.RELOAD;
     };

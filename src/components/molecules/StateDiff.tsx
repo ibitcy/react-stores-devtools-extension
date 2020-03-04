@@ -62,6 +62,7 @@ function getObjectDiff(
 
 function isIterable(value: any) {
   return (
+    value &&
     typeof value !== "string" &&
     ["Array", "TypedArray", "Map", "Set", "Object"].indexOf(
       Object.getPrototypeOf(value)?.constructor?.name
