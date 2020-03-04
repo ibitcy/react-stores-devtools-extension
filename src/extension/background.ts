@@ -1,39 +1,6 @@
-import { Store, StoreOptions, StoreEventType } from "react-stores";
-import {
-  TOutDispatch,
-  EAction,
-  THistoryItem,
-  TStoreListItem,
-  TListener
-} from "types";
+import { Store } from "react-stores";
+import { EAction, IPageInstance, TOutDispatch } from "types";
 import { decodeData } from "utils/encoder";
-
-export type TStoreInstance = {
-  store: Store<unknown>;
-  options: StoreOptions & {
-    persistenceDriver: string;
-  };
-  meta: Store<{
-    updateTimes: number;
-    version: string;
-    active: boolean;
-    listnersNumber: number;
-  }>;
-  history: Store<{
-    items: THistoryItem[];
-  }>;
-  listeners: Store<{
-    list: TListener[];
-  }>;
-};
-
-interface IPageInstance {
-  port: chrome.runtime.Port;
-  stores: Map<string, TStoreInstance>;
-  storesList: Store<{ list: TStoreListItem[] }>;
-}
-
-export type TInstances = Map<number, IPageInstance>;
 
 const instances: Map<number, IPageInstance> = new Map();
 
@@ -119,7 +86,7 @@ const messageHandler = function(
           updateTimes: 0,
           version: message.payload.meta.version,
           active: Boolean(true),
-          listnersNumber: 0
+          listenersNumber: 0
         })
       });
       pageInstance.storesList.setState({
@@ -185,7 +152,7 @@ const messageHandler = function(
       break;
     }
 
-    case EAction.ADD_EVENT_LISTNER: {
+    case EAction.ADD_EVENT_LISTENER: {
       const storeInstance = pageInstance.stores.get(message.payload.name);
       storeInstance.listeners.setState({
         list: [
@@ -198,13 +165,13 @@ const messageHandler = function(
       });
 
       storeInstance.meta.setState({
-        listnersNumber: storeInstance.listeners.state.list.length
+        listenersNumber: storeInstance.listeners.state.list.length
       });
 
       break;
     }
 
-    case EAction.REMOVE_EVENT_LISTNER: {
+    case EAction.REMOVE_EVENT_LISTENER: {
       const storeInstance = pageInstance.stores.get(message.payload.name);
       storeInstance.listeners.setState({
         list: [
@@ -214,7 +181,7 @@ const messageHandler = function(
         ]
       });
       storeInstance.meta.setState({
-        listnersNumber: storeInstance.listeners.state.list.length
+        listenersNumber: storeInstance.listeners.state.list.length
       });
 
       break;

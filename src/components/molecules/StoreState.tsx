@@ -16,11 +16,11 @@ export const StoreState: React.FC<{}> = () => {
       <div css={object}>
         <ObjectViewer obj={store} />
       </div>
-      <div css={metafooter}>
+      <div css={metaFooter}>
         <div css={item}>
           <div css={item}>Update times: {meta.updateTimes}</div>
           <HeadDivider />
-          <div css={item}>Listeners: {meta.listnersNumber}</div>
+          <div css={item}>Listeners: {meta.listenersNumber}</div>
         </div>
         <div css={item}>Version: {meta.version}</div>
       </div>
@@ -44,7 +44,7 @@ const object = css`
   border-color: var(--border-faded-color);
 `;
 
-const metafooter = css`
+const metaFooter = css`
   flex: 0 0 30px;
   height: 30px;
   padding: 4px 8px;

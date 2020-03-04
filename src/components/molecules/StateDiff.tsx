@@ -30,7 +30,7 @@ export const StateDiff: React.FC<IProps> = React.memo(({ activeIndex }) => {
   if (!Object.keys(diff).length) {
     return <i css={message}>states are equal</i>;
   }
-  return <ObjectViewer noHightlight obj={diff} />;
+  return <ObjectViewer noHighlight obj={diff} />;
 });
 
 function getObjectDiff(
@@ -44,7 +44,7 @@ function getObjectDiff(
       const element = originObj[key];
       const prevElement = prevObj[key];
       if (!areSimilar(element, prevElement)) {
-        if (isIterrable(element) && isIterrable(prevElement)) {
+        if (isIterable(element) && isIterable(prevElement)) {
           diff[key] = getObjectDiff(element, prevElement);
           continue;
         } else {
@@ -60,7 +60,7 @@ function getObjectDiff(
   return diff;
 }
 
-function isIterrable(value: any) {
+function isIterable(value: any) {
   return (
     typeof value !== "string" &&
     ["Array", "TypedArray", "Map", "Set", "Object"].indexOf(

@@ -1,14 +1,14 @@
 /* @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import * as React from "react";
-import { useStoreInstance } from "hooks/useStoreInstance";
 import { ObjectViewer } from "components/atoms/ObjectViewer";
+import { useStoreInstance } from "hooks/useStoreInstance";
+import * as React from "react";
 
 export const StoreSettings: React.FC<{}> = () => {
   const storeInstance = useStoreInstance();
   return (
     <div css={root}>
-      <ObjectViewer flat noHightlight obj={storeInstance.options} />
+      <ObjectViewer flat noHighlight obj={storeInstance.options} />
     </div>
   );
 };

@@ -91,7 +91,7 @@ class Inspector {
   public addEvent(name: string, eventId: number) {
     this.getStackTrace().then(trace => {
       this.sendDataToDevTools({
-        action: EAction.ADD_EVENT_LISTNER,
+        action: EAction.ADD_EVENT_LISTENER,
         payload: {
           trace,
           name,
@@ -103,7 +103,7 @@ class Inspector {
 
   public removeEvent(name: string, eventId: number) {
     this.sendDataToDevTools({
-      action: EAction.REMOVE_EVENT_LISTNER,
+      action: EAction.REMOVE_EVENT_LISTENER,
       payload: {
         name,
         eventId
@@ -156,9 +156,9 @@ class Inspector {
 
   private getStackTrace(): Promise<ITrace[]> {
     const stackNative = StackTrace.getSync();
-    return StackTrace.get().then(stackframes => {
+    return StackTrace.get().then(stackFrames => {
       return stackNative
-        .map((frame, i) => ({ ...frame, sourceMap: stackframes[i] }))
+        .map((frame, i) => ({ ...frame, sourceMap: stackFrames[i] }))
         .filter(
           frame =>
             [

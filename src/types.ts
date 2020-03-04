@@ -1,4 +1,35 @@
-import { StoreOptions } from "react-stores";
+import { Store, StoreOptions } from "react-stores";
+
+export type TStoreInstance = {
+  store: Store<unknown>;
+  options: StoreOptions & {
+    persistenceDriver: string;
+  };
+  meta: Store<{
+    updateTimes: number;
+    version: string;
+    active: boolean;
+    listenersNumber: number;
+  }>;
+  history: Store<{
+    items: THistoryItem[];
+  }>;
+  listeners: Store<{
+    list: TListener[];
+  }>;
+};
+
+export interface IPageInstance {
+  port: chrome.runtime.Port;
+  stores: Map<string, TStoreInstance>;
+  storesList: Store<{ list: TStoreListItem[] }>;
+}
+
+export type TInstances = Map<number, IPageInstance>;
+
+export type TInstance = Window & {
+  instances: TInstances;
+};
 
 export interface ITrace {
   line: number;
@@ -31,8 +62,8 @@ export enum EAction {
   RESET_STATE,
   CREATE_NEW_STORE,
   REMOVE_STORE,
-  ADD_EVENT_LISTNER,
-  REMOVE_EVENT_LISTNER
+  ADD_EVENT_LISTENER,
+  REMOVE_EVENT_LISTENER
 }
 
 export type TIncomeDispatch =
@@ -82,7 +113,7 @@ export type TOutDispatch =
       };
     }
   | {
-      action: EAction.ADD_EVENT_LISTNER;
+      action: EAction.ADD_EVENT_LISTENER;
       payload: {
         trace: ITrace[];
         name: string;
@@ -90,7 +121,7 @@ export type TOutDispatch =
       };
     }
   | {
-      action: EAction.REMOVE_EVENT_LISTNER;
+      action: EAction.REMOVE_EVENT_LISTENER;
       payload: {
         name: string;
         eventId: number;

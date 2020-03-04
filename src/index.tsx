@@ -1,19 +1,14 @@
 import { App } from "App";
 import { Button } from "components/atoms/Button";
 import { Loader } from "components/atoms/Loader";
-import { TInstances } from "extension/background";
+import { GlobalProvider } from "GlobalProvider";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { GlobalProvider } from "GlobalProvider";
-import { TIncomeDispatch } from "types";
-
-export type TInstanse = Window & {
-  instances: TInstances;
-};
+import { TIncomeDispatch, TInstance } from "types";
 
 let firstRender = false;
 
-chrome.runtime.getBackgroundPage((bg: TInstanse) => {
+chrome.runtime.getBackgroundPage((bg: TInstance) => {
   (window as any).bg = bg;
 
   function checkConnected() {
@@ -69,7 +64,7 @@ chrome.runtime.getBackgroundPage((bg: TInstanse) => {
 });
 
 const sendDataToPage = (data: TIncomeDispatch) => {
-  ((window as any).bg as TInstanse).instances
+  ((window as any).bg as TInstance).instances
     .get(chrome.devtools.inspectedWindow.tabId)
     .port.postMessage(data);
 };

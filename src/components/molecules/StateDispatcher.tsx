@@ -36,7 +36,7 @@ export const StateDispatcher: React.FC<IProps> = ({ onDispatch }) => {
   const { activeStore } = useGlobalState();
   const instance = useInstance();
 
-  const [dispatchObj, setDispathObj] = React.useState();
+  const [dispatchObj, setDispatchObj] = React.useState();
 
   return (
     <div css={root}>
@@ -51,7 +51,7 @@ export const StateDispatcher: React.FC<IProps> = ({ onDispatch }) => {
         width="100%"
         keyboardHandler="vscode"
         fontSize={"1em"}
-        onChange={value => setDispathObj(value)}
+        onChange={value => setDispatchObj(value)}
         showPrintMargin={false}
         name={`dispatcher_${activeStore}`}
         highlightActiveLine={false}

@@ -1,6 +1,8 @@
 # React Stores Devtools Extension
 
-![react-stores](https://ibitcy.github.io/react-stores/react-stores.svg)
+<p align="center">
+  <img src="https://github.com/konstantin24121/react-stores-devtools-extension/blob/master/logo.svg" alt="React Stores Inspector" width="300px"/>
+</p>
 
 Debug your react stores with chrome devtools extension.
 

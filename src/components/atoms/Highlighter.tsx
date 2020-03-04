@@ -12,9 +12,9 @@ interface IProps {
 const ANIMATION_TIME = 500;
 const VALUE = 0.8;
 
-export const Hightlighter: React.FC<IProps> = props => {
+export const Highlighter: React.FC<IProps> = props => {
   const prevRef = React.useRef<any>(props.watch);
-  const hightlightRef = React.useRef<HTMLDivElement>(null);
+  const highlightRef = React.useRef<HTMLDivElement>(null);
 
   const startRef = React.useRef<number>(null);
   const currentProgressRef = React.useRef<number>(ANIMATION_TIME);
@@ -32,8 +32,8 @@ export const Hightlighter: React.FC<IProps> = props => {
           (ANIMATION_TIME / Math.PI)
       )
     );
-    if (hightlightRef.current) {
-      hightlightRef.current.style.opacity = String(VALUE * y);
+    if (highlightRef.current) {
+      highlightRef.current.style.opacity = String(VALUE * y);
     }
 
     if (currentProgressRef.current < ANIMATION_TIME - prevProgressRef.current) {
@@ -45,8 +45,8 @@ export const Hightlighter: React.FC<IProps> = props => {
     currentProgressRef.current = ANIMATION_TIME;
     prevProgressRef.current = 0;
     startRef.current = null;
-    if (hightlightRef.current) {
-      hightlightRef.current.style.opacity = String(0);
+    if (highlightRef.current) {
+      highlightRef.current.style.opacity = String(0);
     }
   }, []);
 
@@ -77,7 +77,7 @@ export const Hightlighter: React.FC<IProps> = props => {
 
   return (
     <span css={root}>
-      <div ref={hightlightRef} css={hightlight} />
+      <div ref={highlightRef} css={highlight} />
       <span css={value}>{props.children}</span>
     </span>
   );
@@ -92,14 +92,14 @@ const value = css`
   z-index: 2;
 `;
 
-const hightlight = css`
+const highlight = css`
   position: absolute;
   z-index: 1;
   right: 0;
   top: 0;
   left: 0;
   bottom: 0;
-  background: var(--bg-hightlight-color);
-  border: 1px solid var(--border-hightlight-color);
+  background: var(--bg-highlight-color);
+  border: 1px solid var(--border-highlight-color);
   opacity: 0;
 `;

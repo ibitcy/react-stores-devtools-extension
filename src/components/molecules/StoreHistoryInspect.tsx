@@ -81,10 +81,10 @@ export const StoreHistoryInspect: React.FC<IProps> = ({ activeIndex }) => {
       </div>
       <div css={root}>
         {activeTab === ETabs.Payload && (
-          <ObjectViewer noHightlight obj={historyItem.payload} />
+          <ObjectViewer noHighlight obj={historyItem.payload} />
         )}
         {activeTab === ETabs.State && (
-          <ObjectViewer noHightlight obj={historyItem.state} />
+          <ObjectViewer noHighlight obj={historyItem.state} />
         )}
 
         {activeTab === ETabs.Diff && activeIndex > 0 && (

@@ -1,15 +1,15 @@
 /* @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import * as React from "react";
-import { Hightlighter } from "./Hightlighter";
+import { Highlighter } from "./Highlighter";
 
 interface IProps {
   obj: Record<string | number, any> | Array<any>;
   flat?: boolean;
-  noHightlight?: boolean;
+  noHighlight?: boolean;
 }
 
-export const ObjectViewer: React.FC<IProps> = ({ obj, flat, noHightlight }) => {
+export const ObjectViewer: React.FC<IProps> = ({ obj, flat, noHighlight }) => {
   const iterable = React.useMemo(() => {
     if (isMap(obj)) {
       const iterable = {};
@@ -38,7 +38,7 @@ export const ObjectViewer: React.FC<IProps> = ({ obj, flat, noHightlight }) => {
           value={iterable[key]}
           key={key}
           keyString={key}
-          noHightlight={noHightlight}
+          noHighlight={noHighlight}
         />
       ))}
     </div>
@@ -48,10 +48,10 @@ export const ObjectViewer: React.FC<IProps> = ({ obj, flat, noHightlight }) => {
 interface IItemProps {
   value: any;
   keyString: string;
-  noHightlight: boolean;
+  noHighlight: boolean;
 }
 
-const Item: React.FC<IItemProps> = ({ value, keyString, noHightlight }) => {
+const Item: React.FC<IItemProps> = ({ value, keyString, noHighlight }) => {
   const [open, setOpen] = React.useState(false);
   const isCollapsible = React.useMemo(() => isTypeCollapsible(value), [value]);
 
@@ -73,9 +73,9 @@ const Item: React.FC<IItemProps> = ({ value, keyString, noHightlight }) => {
           <span className="value"> {keyString}</span>:
         </span>
         <span css={valueCn}>
-          <Hightlighter disable={open || noHightlight} deepEqual watch={value}>
+          <Highlighter disable={open || noHighlight} deepEqual watch={value}>
             {domForType(value, open)}
-          </Hightlighter>
+          </Highlighter>
         </span>
       </div>
       {isCollapsible && open && <ObjectViewer obj={value} />}
@@ -184,7 +184,7 @@ function simpleType(
 
   if (typeof value === "object") {
     if (value.hasOwnProperty("$prev") && value.hasOwnProperty("$current")) {
-      return <span css={uptaded}>»</span>;
+      return <span css={updated}>»</span>;
     }
     return (
       <span>
@@ -401,7 +401,7 @@ const prevValue = css`
 `;
 
 const currentValue = css``;
-const uptaded = css`
+const updated = css`
   width: 10px;
   text-align: center;
   height: 10px;

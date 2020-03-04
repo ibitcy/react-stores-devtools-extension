@@ -1,6 +1,5 @@
 import { Store } from "react-stores";
-import { TIncomeDispatch } from "types";
-import { TInstances } from "extension/background";
+import { TIncomeDispatch, TInstances } from "types";
 
 declare global {
   const bg: Window & {

@@ -12,6 +12,11 @@ import { useStore } from "react-stores";
 
 interface IProps {}
 
+//TODO: Tidy code and styles;
+//TODO: Add save state and load state;
+//TODO: Remove stores instances when page disconnected
+//TODO: Better flow for release
+
 export const App: React.FC<IProps> = () => {
   const instance = useInstance();
   const { activeStore } = useGlobalState();
@@ -88,8 +93,8 @@ const globalsTheme = {
       --code-red: rgb(207, 77, 77);
       --code-value: rgb(136, 18, 144);
 
-      --bg-hightlight-color: rgba(208, 232, 251);
-      --border-hightlight-color: rgba(69, 112, 241);
+      --bg-highlight-color: rgba(208, 232, 251);
+      --border-highlight-color: rgba(69, 112, 241);
       --box-bg-color: rgb(65, 134, 250);
     }
   `,
@@ -116,8 +121,8 @@ const globalsTheme = {
       --code-red: rgb(232, 68, 66);
       --code-value: rgb(150, 125, 207);
 
-      --bg-hightlight-color: rgba(52, 113, 52);
-      --border-hightlight-color: rgba(53, 204, 110);
+      --bg-highlight-color: rgba(52, 113, 52);
+      --border-highlight-color: rgba(53, 204, 110);
       --box-bg-color: #a97a34;
     }
   `

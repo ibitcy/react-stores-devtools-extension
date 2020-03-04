@@ -1,13 +1,12 @@
 /* @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import * as React from "react";
-import { useStoreInstance } from "hooks/useStoreInstance";
-import { mergeClassNames } from "utils";
-import { Cross } from "components/atoms/Cross";
-import { Input } from "components/atoms/Input";
-import { useIsolatedStore, useStore } from "react-stores";
 import { Button } from "components/atoms/Button";
+import { Input } from "components/atoms/Input";
 import { ResetBtn } from "components/atoms/ResetBtn";
+import { useStoreInstance } from "hooks/useStoreInstance";
+import * as React from "react";
+import { useIsolatedStore, useStore } from "react-stores";
+import { mergeClassNames } from "utils";
 
 interface IProps {
   activeIndex: number;
