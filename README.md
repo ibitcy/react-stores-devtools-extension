@@ -1,7 +1,7 @@
 # React Stores Devtools Extension
 
 <p align="center">
-  <img src="https://github.com/konstantin24121/react-stores-devtools-extension/blob/master/logo.svg" alt="React Stores Inspector" width="300px"/>
+  <img src="./logo.svg" alt="React Stores Inspector" width="300px"/>
 </p>
 
 Debug your react stores with chrome devtools extension.
@@ -10,12 +10,12 @@ Debug your react stores with chrome devtools extension.
 - 📜 Check store history step-by-step
 - 🔬 Compare diff between states
 - 📨 Dispatch state directly from devtools
-- 🍔 Clickable stack trace for history and listners
+- 🍔 Clickable stack trace for history and listeners
 - 🚀 Use in production build
 - 📦 Works with isolated stores
 - 🎨 Familiar native chrome themes
 
-![screen_light](https://github.com/konstantin24121/react-stores-devtools-extension/blob/master/example/screen_light.png)
+![screen_light](./example/screen_light.png)
 
 ## How to install
 
@@ -56,4 +56,4 @@ window["__REACT_STORES_INSPECTOR__"].attachStore(
 );
 ```
 
-![screen_dark](https://github.com/konstantin24121/react-stores-devtools-extension/blob/master/example/screen_dark.png)
+![screen_dark](./example/screen_dark.png)
