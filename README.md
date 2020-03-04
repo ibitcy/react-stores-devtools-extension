@@ -35,6 +35,23 @@ You don't have to do anything if you use react-stores@5.\* or higher. Stores att
 - Use `name` in store `options`, otherwise you will see a hashes of the store in the devtool panel
 - Use `$actionName` when you call setState to better explore store history
 
+```js
+const commonStore = new Store(
+  {
+    test: "name",
+  },
+  {
+    name: 'Common Store',
+    // ...otherOptions
+  }
+);
+
+commonStore.setState({
+  test: "newName"
+  $actionName: 'changeName'
+});
+```
+
 ### For old versions
 
 > **Note**: Some functions may now work
@@ -46,7 +63,7 @@ const storeOptions = {
   persistence: true
 };
 
-const oldStore = new Store4(
+const oldStore = new Store(
   {
     test: "name",
     dateField: Date.now()
@@ -59,6 +76,10 @@ window["__REACT_STORES_INSPECTOR__"].attachStore(
   "Old Store",
   storeOptions
 );
+
+oldStore.setState({
+  test: "newName"
+});
 ```
 
 ![screen_dark](./example/screen_dark.png)
