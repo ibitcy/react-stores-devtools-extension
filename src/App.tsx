@@ -18,7 +18,9 @@ interface IProps {}
 //TODO: Remove stores instances when page disconnected
 //TODO: Better flow for release
 //TODO: EventListener not very effective with hooks. FollowStore and useStore trace stack is awful
-
+//TODO: Bad look diff array
+//TODO: Diff undefined => {} is not very informative
+//TODO Stack trace doesn't work for https
 export const App: React.FC<IProps> = () => {
   const instance = useInstance();
   const { activeStore } = useGlobalState();

@@ -160,41 +160,47 @@ class Inspector {
     }
   }
 
-  private getStackTrace(): Promise<ITrace[]> {
+  private async getStackTrace(): Promise<ITrace[]> {
+    // Trace doesn't work
+    return [];
     const stackNative = StackTrace.getSync();
-    return StackTrace.get().then(stackFrames => {
-      return stackNative
-        .map((frame, i) => ({ ...frame, sourceMap: stackFrames[i] }))
-        .filter(
-          frame =>
-            [
-              "Inspector.attachStore",
-              "Inspector.getStackTrace",
-              "Inspector.updateState",
-              "Inspector.removeStore",
-              "t.setState",
-              "t.resetStore"
-            ].indexOf(frame.functionName) === -1 && frame.fileName
-        )
-        .map(frame => {
-          return {
-            line: frame.lineNumber,
-            column: frame.columnNumber,
-            file: frame.fileName,
-            functionName: frame.functionName,
-            sourceMap:
-              frame.lineNumber === frame.sourceMap.lineNumber &&
-              frame.columnNumber === frame.sourceMap.columnNumber
-                ? undefined
-                : {
-                    line: frame.sourceMap.lineNumber,
-                    column: frame.sourceMap.columnNumber,
-                    file: frame.sourceMap.fileName,
-                    functionName: frame.sourceMap.functionName
-                  }
-          };
-        });
-    });
+    const stackFrames = [];
+    try {
+      stackFrames.concat(await StackTrace.get());
+    } catch (e) {}
+    const stack = stackNative
+      .map((frame, i) => ({ ...frame, sourceMap: stackFrames[i] }))
+      .filter(
+        frame =>
+          [
+            "Inspector.attachStore",
+            "Inspector.getStackTrace",
+            "Inspector.updateState",
+            "Inspector.removeStore",
+            "t.setState",
+            "t.resetStore"
+          ].indexOf(frame.functionName) === -1 && frame.fileName
+      )
+      .map(frame => {
+        return {
+          line: frame.lineNumber,
+          column: frame.columnNumber,
+          file: frame.fileName,
+          functionName: frame.functionName,
+          sourceMap:
+            frame.lineNumber === frame.sourceMap.lineNumber &&
+            frame.columnNumber === frame.sourceMap.columnNumber
+              ? undefined
+              : {
+                  line: frame.sourceMap.lineNumber,
+                  column: frame.sourceMap.columnNumber,
+                  file: frame.sourceMap.fileName,
+                  functionName: frame.sourceMap.functionName
+                }
+        };
+      });
+    console.log(stack);
+    return stack;
   }
 }
 
